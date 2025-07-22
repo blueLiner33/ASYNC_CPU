@@ -1,3 +1,4 @@
+`include "Main\defines.v"
 module ALU (
     input [31:0] A,
     input [31:0] B,
@@ -16,27 +17,26 @@ module ALU (
         Negative = 0;
 
         case (ALUControl)
-            6'b000000: begin // ADD
+            OP_ADD: begin // ADD
                 {CarryOut, Result} = A + B;
                 Overflow = (A[31] == B[31]) && (Result[31] != A[31]);
             end
-            6'b000001: begin // SUB
+            OP_SUB: begin // SUB
                 {CarryOut, Result} = A - B;
                 Overflow = (A[31] != B[31]) && (Result[31] != A[31]);
             end
-            6'b000010: Result = A & B;       // AND
-            6'b000011: Result = A | B;       // OR
-            6'b000100: Result = A ^ B;       // XOR
-            6'b000101: Result = A << B[4:0]; // SLL
-            6'b000110: Result = A >> B[4:0]; // SRL
-            6'b000111: Result = $signed(A) >>> B[4:0]; // SRA
-            6'b001000: Result = (~(A|B));//NOR
-            6'b001001: Result = A;//pass A through
-            6'b001010: Result = B;//pass B 
-            6'b001011: ;//divde
-            6'b001100: ;//multiple
-            6'b001101:://reminder
-            6'b001110:Result = 
+            OP_AND: Result = A & B;       // AND
+            OP_OR: Result = A | B;       // OR
+            OP_XOR: Result = A ^ B;       // XOR
+            OP_SLL: Result = A << B[4:0]; // SLL
+            OP_SRL: Result = A >> B[4:0]; // SRL
+            OP_SRA: Result = $signed(A) >>> B[4:0]; // SRA
+            OP_NOR: Result = (~(A|B));//NOR
+            OP_MOV_A: Result = A;//pass A through
+            OP_MOV_B: Result = B;//pass B 
+            OP_DIV: ;//divde
+            OP_MULT: ;//multiple
+            OP_REMDER: ;//reminder
             default: Result = 32'b0;
         endcase
 
