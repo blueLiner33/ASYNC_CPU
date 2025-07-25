@@ -24,6 +24,3 @@ This hybrid approach could improve latency in time-sensitive applications like a
 - Coordinating timing between the spiking domain and the event-driven CPU.
 
 This project demonstrates a novel intersection of neuromorphic preprocessing and asynchronous digital logic, pushing the limits of efficient real-time computation.
-
-
-https://docs.google.com/document/d/1ffESPUt76UnCWhTXnrMNlUa5zxZb55SUySF7Sssp6xU/edit?tab=t.0
