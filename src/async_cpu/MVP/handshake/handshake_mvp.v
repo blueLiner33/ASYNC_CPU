@@ -46,13 +46,12 @@ module four_phase_hand (
     wire [15:0] data_wire_one;
     wire [15:0] data_wire_two;
 
-    // Acknowledgments for each stage (from later stages)
     wire stage1_ack;
     wire stage2_ack;
 
     // Stage 1
     CElement cgate_one(
-        .a(~stage1_ack),    // Inverted ack from Stage 2
+        .a(~stage1_ack),    
         .b(in_req),
         .y(splitter_wire_one)
     );
@@ -64,7 +63,7 @@ module four_phase_hand (
 
     // Stage 2
     CElement cgate_two(
-        .a(~stage2_ack),    // Inverted ack from Stage 3
+        .a(~stage2_ack),    
         .b(splitter_wire_one),
         .y(splitter_wire_two)
     );
@@ -76,7 +75,7 @@ module four_phase_hand (
 
     // Stage 3
     CElement cgate_three(
-        .a(~in_ack),         // Inverted external ack
+        .a(~in_ack),         
         .b(splitter_wire_two),
         .y(splitter_wire_three)
     );
