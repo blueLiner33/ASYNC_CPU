@@ -22,10 +22,48 @@ module tb_four_phase_hand;
         .out_data(out_data)
     );
 
-    // Clock-free timing logic
+    // === Task: Standard 4-phase send ===
+    task send_data(input [15:0] val);
+        begin
+            $display("Sending data: 0x%04x", val);
+            in_data = val;
+            in_req = 1;                  // Phase 1: Raise request
+            wait(out_ack == 1);         // Phase 2: Wait for acknowledge
+            #5;
+            in_req = 0;                 // Phase 3: Lower request
+            wait(out_ack == 0);         // Phase 4: Wait for ack to clear
+        end
+    endtask
+
+    // === Task: Send with delayed ack ===
+    task send_data_with_ack_delay(input [15:0] val, input integer delay_ns);
+        begin
+            $display("Sending with delayed ack: 0x%04x", val);
+            in_data = val;
+            in_req = 1;
+
+            fork
+                begin
+                    #delay_ns;
+                    in_ack = 1;
+                    #5;
+                    in_ack = 0;
+                end
+                begin
+                    wait(out_ack == 1);
+                    #5;
+                    in_req = 0;
+                    wait(out_ack == 0);
+                end
+            join
+        end
+    endtask
+
+    // Clock-free testbench logic
     initial begin
         $dumpfile("dump.vcd");
-        $dumpvars();
+        $dumpvars(0, tb_four_phase_hand);  // Important for GTKWave
+
         $display("Starting 4-phase async FIFO test...");
         $monitor("T=%0t | in_req=%b in_ack=%b | out_req=%b out_ack=%b | in_data=0x%04x out_data=0x%04x",
                  $time, in_req, in_ack, out_req, out_ack, in_data, out_data);
@@ -56,43 +94,7 @@ module tb_four_phase_hand;
         #50;
         $display("Idle test complete. No data should be flowing.");
 
-        // Done
         $finish;
     end
-
-    // === Task: Standard 4-phase send ===
-    task send_data(input [15:0] val);
-        begin
-            $display("Sending data: 0x%04x", val);
-            in_data = val;
-            in_req = 1;  // Phase 1: Raise request
-            wait(out_ack == 1);  // Phase 2: Wait for acknowledge
-            #5;
-            in_req = 0;  // Phase 3: Lower request
-            wait(out_ack == 0);  // Phase 4: Wait for ack to clear
-        end
-    endtask
-
-    // === Task: Send with delayed ack ===
-    task send_data_with_ack_delay(input [15:0] val, input integer delay_ns);
-        begin
-            $display("Sending with delayed ack: 0x%04x", val);
-            in_data = val;
-            in_req = 1;
-            fork
-                begin
-                    #delay_ns;
-                    in_ack = 1;
-                    #5;
-                    in_ack = 0;
-                end
-                begin
-                    wait(out_ack == 1);
-                    #5;
-                    in_req = 0;
-                end
-            join
-        end
-    endtask
 
 endmodule
