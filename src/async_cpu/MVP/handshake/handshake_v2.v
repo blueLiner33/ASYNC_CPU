@@ -3,30 +3,41 @@ module enable_gate (
     input wire [15:0] d,
     output reg [15:0] q
 );
+
     initial q = 16'h0000;
 
-    always @(*) begin
+    always @(en or d) begin
         if (en)
-            q = d;  // simulate latch delay
-        // else retain old value (latch)
+            q <= d;
+        else
+            q <= q; // hold previous value
     end
 endmodule
+
 
 module CElement (
     input wire a,
     input wire b,
     output reg y
 );
+
+    reg y_next;
     initial y = 1'b0;
 
     always @(*) begin
         if (a & b)
-            y = 1'b1;
+            y_next = 1'b1;
         else if (~a & ~b)
-            y = 1'b0;
-        // else retain old value (latch)
+            y_next = 1'b0;
+        else
+            y_next = y;  // hold previous
+    end
+
+    always @(a or b or y) begin
+        y <= y_next;  // simulate latch update
     end
 endmodule
+
 
 
 
