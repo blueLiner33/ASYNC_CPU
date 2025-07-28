@@ -7,7 +7,7 @@ module enable_gate (
 
     always @(*) begin
         if (en)
-            #1 q = d;  // simulate latch delay
+            q = d;  // simulate latch delay
         // else retain old value (latch)
     end
 endmodule
@@ -21,9 +21,9 @@ module CElement (
 
     always @(*) begin
         if (a & b)
-            #1 y = 1'b1;
+            y = 1'b1;
         else if (~a & ~b)
-            #1 y = 1'b0;
+            y = 1'b0;
         // else retain old value (latch)
     end
 endmodule
