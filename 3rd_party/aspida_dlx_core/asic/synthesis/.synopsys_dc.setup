@@ -1,0 +1,64 @@
+#
+# Written by : DC-Transcript, Version 2003.06 -- May 20, 2003
+# Date       : Mon Aug  4 19:23:48 2003
+#
+
+#
+# Translation of script: xx1.dcsh
+#
+
+#/* User's init file for Synopsys Design Analyzer  */
+#/* Each user shall fill in the variables designer, search path */
+#/* for scripts, and cache_read / cache_write as appropriate    */
+
+set company {ICS-FORTH}
+set designer {Christos Sotiriou}
+
+set cache_read /tmp
+set cache_write /tmp
+
+#/**********************/
+#/* Bus name variables */
+#/**********************/
+
+set change_names_dont_change_bus_members "FALSE"
+set bus_naming_style "%s_%d"
+set simple_names_map {list {"\*cell\*" "U"} {"*-return" "RET}}
+define_name_rules simple_names -allowed "A-Za-z0-9_" -last_restricted "_" -first_restricted "_" -map simple_names_map -max_length 25;
+
+set text_print_command {lpr -Phplj-a1 }
+
+set echo_include_commands false
+
+#/* add further commands to "Setup -> Scripts" menu */
+set view_script_submenu_items [concat  $view_script_submenu_items [list {remove all designs} {remove_design -designs}]]
+
+
+#/* set library and search path variables, exclude unwanted modules */
+
+#/* Motorola CDR 3 library: */
+
+set search_path ["./"]
+
+set target_library cdr3.typ.db
+set symbol_library cdr3.sdb
+set link_library [concat  "*" $target_library]
+
+# /* add CDR 3 I/O library: */
+set target_library [concat  $target_library cdr3_io.max.db]
+set target_library [concat  $target_library sram2k_pin.max.db]
+set symbol_library [format "%s %s"  $symbol_library cdr3_io.sdb]
+set link_library [concat  "*" $target_library] ;
+
+
+#/* Synopsys 'class': */
+#/*
+#link_library = {"*" "class.db"}
+#target_library = {"class.db"}
+#symbol_library = {"class.sdb" "generic.sdb"}
+#*/
+#/* set_dont_use cdr3synPwcslV225T125/sdff* */
+
+set high_fanout_net_threshold 0
+set enable_instances_in_report_net true
+

@@ -1,0 +1,8 @@
+.text
+.proc _lseek
+.global _lseek
+_lseek:		
+	trap	#6
+	jr	r31
+	nop
+.endproc _lseek

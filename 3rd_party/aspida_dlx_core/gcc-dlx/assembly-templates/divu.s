@@ -1,0 +1,112 @@
+;
+;------------------------------------------------------------------------------------------
+;
+; DIVU --- DIVU --- DIVU --- DIVU --- DIVU --- DIVU
+;
+; Unsigned division 32 bit x 32 bit -> 32 bit
+;
+; This version takes the two operands from the stack (dividend and divisor in the
+; order) and returns in r1 the result according to the standard C call
+; c = divu(a,b);
+; register r29 is assumed to be the stack pointer
+; all other used registers are saved into the stack and restored on the return
+; In case of a division by 0 no exception will be generated and a result
+; corresponding to the maximum value of a 32 bit number (0xffffffff) will
+; be returned
+;
+; For internal debugging purposes this is the internal use of the registers
+;  r5 dividend
+;  r6 divisor
+;  r7 quotient
+;  r5 remainder at the end of the algorithm	
+;  r1 used as movable mask		
+;  r3 used as test register
+;  r2 used as MSB positive mask
+;  r29 Stack pointer
+;  r30 Frame Pointer
+;  r31 Return address
+;
+; F.Gregoretti January 7th 2004
+.text
+	.align	2
+.proc	_divu
+.global _divu				;
+_divu:				; initial operations
+	sw	-4(r29),r30	; save frame pointer
+	add	r30,r29,r0	; new fp = sp
+	subui	r29,r29,#24	; allocate space for saving registers  in the stack
+	sw	0(r29),r2	; save r2
+	sw	4(r29),r3	; save r3
+	sw	8(r29),r5	; save r5
+	sw	12(r29),r6	; save r6
+	sw	16(r29),r7	; save r7
+	lw	r5,0(r30)	; load dividend from the stack
+	lw	r6,4(r30)	; load divisor from the stack
+				; Start division algorithm
+	beqz	r6,d1_ovfl		; test division by 0
+	nop			; delay slot
+	addi	r1,r0,#1   	; set movable mask to 1
+	slli	r2,r1,#31	; create mask for MSB in r2
+	add	r7,r0,r0	; clear quotient (may be unuseful ?)
+				; possono essere utilizzati i due delay slot prima di loop1
+				; modifica 1.1.2004 for unsigned mult
+	subu	r3,r5,r6	; r3 <0 if dividend < divisor
+	slt	r3,r3,r0	; set r3 if dividend < divisor
+	beqz	r3,d1_loop0	; if not continue the algorithm
+	nop			; delay slot (check if necessary)
+	add	r7,r0,r0	; if yes clear quotient and
+;	add	r8,r0,r5	, set remainder = dividend inutile 6.1.2004
+	j	d1_endiv
+	nop			; delay slot (check if necessary)
+d1_loop0:
+	and	r3,r5,r2	; Controlla se MSB del divisore = 1
+	bnez	r3,endlop2	; per evitare che con lo shift esca
+	nop			; delay slot
+loop1:				; 1st phase align dividend and divisor
+	slli	r6,r6,#1	; shift left r6 (divisor x 2)
+	slli	r1,r1,#1	; shift left r1
+	subu	r3,r5,r6	; r3 <0 if dividend < divisor
+	slt	r3,r3,r0	; set r3 if dividend < divisor
+	bnez	r3,endlop1	; if yes stop shifting - correzione 30.12.03
+	nop			; delay slot
+	and 	r3,r1,r2	; test for maximum shift (MSB of r1=1)
+	beqz	r3,loop1	; Se la condizione si verifica significa
+				; che il divisore 
+				; e in tal caso non si shifta di nuovo a dx
+	nop			; delay slot
+	j	endlop2		; 
+	nop			; delay slot
+endlop1:
+	srli	r6,r6,#1
+	srli	r1,r1,#1 	
+endlop2:			; dividendo e divisore correttamente allineati
+	subu	r5,r5,r6	; dividend - shifted divisor (check operand order)
+	or	r7,r7,r1	; set the correct bit in the quotient
+d1_endl3:
+	srli	r6,r6,#1
+	srli	r1,r1,#1 	;
+	beqz	r1,d1_endiv
+	nop
+	subu	r3,r5,r6	; r3 <0 if dividend < divisor
+	slt	r3,r3,r0	; set r3 if dividend < divisor
+	bnez	r3,d1_endl3
+	nop
+	j	endlop2
+	nop
+d1_ovfl:			; set quotient and remainder to 0xffffffff
+	subi	r7,r0,#1
+	add	r6,r7,r0
+d1_endiv:	
+	add	r1,r7,r0	; put quotient in r1
+	lw	r7,16(r29)	; restore r7
+	lw	r6,12(r29)	; restore r6
+	lw	r5,8(r29)	; restore r5
+	lw	r3,4(r29)	; restore r3
+	lw	r2,0(r29)	; restore r2
+	add	r29,r30,r0	; restore stack pointer
+	lw	r30,-4(r29)	; restore old frame pointer
+	jr	r31		; return from subroutine
+	nop
+;
+; END DIVU --- END DIVU --- END DIVU --- END DIVU --- END DIVU --- END DIVU
+;

@@ -1,0 +1,8 @@
+.text
+.proc _tell
+.global _tell
+_trap_tell:		
+	trap	#9
+	jr	r31
+	nop
+.endproc _tell

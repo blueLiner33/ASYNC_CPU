@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Matched Delay</title>
+</head>
+<body>
+module matched_delay(inp2, inp3, outp2, delay_select);<br>
+<br>
+input inp2;<br>
+input inp3;<br>
+input [1:0] delay_select;<br>
+output outp2;<br>
+<br>
+wire outp2;<br>
+<br>
+wire wint1, wint2, wint3, wint4, wint5, wint6, wint7, wint8, wint9,
+wint10;<br>
+wire wint11, wint12, wint13, wint14, wint15, wint16, wint17, wint18,
+wint19, wint20;<br>
+wire wint21, wint22, wint23, wint24, wint25, wint26, wint27, wint28,
+wint29, wint30;<br>
+wire IF_delay_el1, IF_delay_el2, IF_delay_el3, IF_delay_el4;<br>
+// ##synthesis attribute KEEP of inp2 is TRUE<br>
+// synthesis attribute KEEP of wint1 is TRUE<br>
+myand mda1 (wint1, inp2, inp3);<br>
+// synthesis attribute KEEP of wint2 is TRUE<br>
+myand mda2 (wint2, inp2, wint1);<br>
+// synthesis attribute KEEP of wint3 is TRUE<br>
+myand mda3 (wint3, inp2, wint2);<br>
+// synthesis attribute KEEP of wint4 is TRUE<br>
+myand mda4 (wint4, inp2, wint3);<br>
+// synthesis attribute KEEP of wint5 is TRUE<br>
+myand mda5 (wint5, inp2, wint4);<br>
+// synthesis attribute KEEP of wint6 is TRUE<br>
+myand mda6 (wint6, inp2, wint5);<br>
+// synthesis attribute KEEP of wint7 is TRUE<br>
+myand mda7 (wint7, inp2, wint6);<br>
+// synthesis attribute KEEP of wint8 is TRUE<br>
+myand mda8 (wint8, inp2, wint7);<br>
+// synthesis attribute KEEP of wint9 is TRUE<br>
+myand mda9 (wint9, inp2, wint8);<br>
+// synthesis attribute KEEP of wint10 is TRUE<br>
+myand mda10 (wint10, inp2, wint9);<br>
+// synthesis attribute KEEP of wint11 is TRUE<br>
+myand mda11 (wint11, inp2, wint10);<br>
+// synthesis attribute KEEP of wint12 is TRUE<br>
+myand mda12 (wint12, inp2, wint11);<br>
+// synthesis attribute KEEP of wint13 is TRUE<br>
+myand mda13 (wint13, inp2, wint12);<br>
+// synthesis attribute KEEP of wint14 is TRUE<br>
+myand mda14 (wint14, inp2, wint13);<br>
+// synthesis attribute KEEP of wint15 is TRUE<br>
+myand mda15 (wint15, inp2, wint14);<br>
+// synthesis attribute KEEP of wint16 is TRUE<br>
+myand mda16 (wint16, inp2, wint15);<br>
+// synthesis attribute KEEP of wint17 is TRUE<br>
+myand mda17 (wint17, inp2, wint16);<br>
+// synthesis attribute KEEP of wint18 is TRUE<br>
+myand mda18 (wint18, inp2 , wint17);<br>
+// synthesis attribute KEEP of wint19 is TRUE<br>
+myand mda19 (wint19, inp2, wint18);<br>
+// synthesis attribute KEEP of wint20 is TRUE<br>
+myand mda20 (wint20, inp2, wint19);<br>
+// synthesis attribute KEEP of wint21 is TRUE<br>
+myand mda21 (wint21 , inp2, wint20);<br>
+// synthesis attribute KEEP of wint22 is TRUE<br>
+myand mda22 (wint22, inp2 , wint21);<br>
+// synthesis attribute KEEP of wint23 is TRUE<br>
+myand mda23 (wint23, inp2 , wint22);<br>
+// synthesis attribute KEEP of wint24 is TRUE<br>
+myand mda24 (wint24, inp2 , wint23);<br>
+// synthesis attribute KEEP of wint25 is TRUE<br>
+myand mda25 (wint25, inp2 , wint24);<br>
+// synthesis attribute KEEP of wint26 is TRUE<br>
+myand mda26 (wint26, inp2 , wint25);<br>
+// synthesis attribute KEEP of wint27 is TRUE<br>
+myand mda27 (wint27, inp2, wint26);<br>
+// synthesis attribute KEEP of wint28 is TRUE<br>
+myand mda28 (wint28, inp2 , wint27);<br>
+// synthesis attribute KEEP of wint29 is TRUE<br>
+myand mda29 (wint29, inp2, wint28);<br>
+// synthesis attribute KEEP of wint30 is TRUE<br>
+myand mda30 (wint30, inp2, wint29);<br>
+// synthesis attribute KEEP of wint31 is TRUE<br>
+myand mda31 (wint31, inp2, wint30);<br>
+// synthesis attribute KEEP of wint32 is TRUE<br>
+myand mda32 (wint32 , inp2, wint31);<br>
+// synthesis attribute KEEP of wint33 is TRUE<br>
+myand mda33 (wint33, inp2 , wint32);<br>
+// synthesis attribute KEEP of wint34 is TRUE<br>
+myand mda34 (wint34, inp2 , wint33);<br>
+// synthesis attribute KEEP of wint35 is TRUE<br>
+myand mda35 (wint35, inp2 , wint34);<br>
+// synthesis attribute KEEP of wint36 is TRUE<br>
+myand mda36 (wint36, inp2 , wint35);<br>
+// synthesis attribute KEEP of wint37 is TRUE<br>
+myand mda37 (wint37, inp2 , wint36);<br>
+// synthesis attribute KEEP of wint38 is TRUE<br>
+myand mda38 (wint38, inp2, wint37);<br>
+// synthesis attribute KEEP of wint39 is TRUE<br>
+myand mda39 (wint39, inp2 , wint38);<br>
+// synthesis attribute KEEP of wint40 is TRUE<br>
+myand mda40 (wint40, inp2, wint39);<br>
+<br>
+// synthesis attribute KEEP of outp2 is TRUE&nbsp; &nbsp;<br>
+// synthesis attribute KEEP of IF_delay_el1 is TRUE<br>
+// synthesis attribute KEEP of IF_delay_el2 is TRUE<br>
+// synthesis attribute KEEP of IF_delay_el3 is TRUE<br>
+// synthesis attribute KEEP of IF_delay_el4 is TRUE<br>
+<br>
+assign IF_delay_el1 = wint26;<br>
+assign IF_delay_el2 = wint30;<br>
+assign IF_delay_el3 = wint34;<br>
+assign IF_delay_el4 = wint40;<br>
+assign outp2 = delay_select == 'b00 ? IF_delay_el1&nbsp; :<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; delay_select ==
+'b01 ? IF_delay_el2&nbsp; :<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; delay_select ==
+'b10 ? IF_delay_el3&nbsp; :<br>
+&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; delay_select ==
+'b11 ? IF_delay_el4&nbsp; : IF_delay_el4;<br>
+<br>
+endmodule
+</body>
+</html>

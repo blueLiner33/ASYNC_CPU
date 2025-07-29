@@ -1,0 +1,225 @@
+;
+; DLX traps and other support functions.
+;
+; Aaron Sawdey 1994,1995; released to the Public Domain.
+;
+.text
+.proc _trap_exit
+.global _trap_exit
+_trap_exit:		
+	trap	#0
+	jr	r31
+	nop
+.endproc _trap_exit
+
+.proc _trap_open
+.global _trap_open
+_trap_open:		
+	trap	#1
+	jr	r31
+	nop
+.endproc _trap_open
+
+.proc _trap_close
+.global _trap_close
+_trap_close:		
+	trap	#2
+	jr	r31
+	nop
+.endproc _trap_close
+
+.proc _trap_read
+.global _trap_read
+_trap_read:		
+	trap	#3
+	jr	r31
+	nop
+.endproc _trap_read
+
+.proc _trap_write
+.global _trap_write
+_trap_write:		
+	trap	#4
+	jr	r31
+	nop
+.endproc _trap_write
+
+.proc _trap_printf
+.global _trap_printf
+_trap_printf:		
+	trap	#5
+	jr	r31
+	nop
+.endproc _trap_printf
+
+.proc _trap_lseek
+.global _trap_lseek
+_trap_lseek:		
+	trap	#6
+	jr	r31
+	nop
+.endproc _trap_lseek
+
+.proc _trap_random
+.global _trap_random
+_trap_random:		
+	trap	#7
+	jr	r31
+	nop
+.endproc _trap_random
+
+.proc _barrier
+.global _barrier
+_barrier:		
+	trap	#8
+	jr	r31
+	nop
+.endproc _barrier
+
+.proc _trap_tell
+.global _trap_tell
+_trap_tell:		
+	trap	#9
+	jr	r31
+	nop
+.endproc _trap_tell
+
+.proc _trap_isatty
+.global _trap_isatty
+_trap_isatty:		
+	trap	#10
+	jr	r31
+	nop
+.endproc _trap_isatty
+
+.proc _trap_access
+.global _trap_access
+_trap_access:		
+	trap	#11
+	jr	r31
+	nop
+.endproc _trap_access
+
+.proc _fork
+.global _fork
+_fork:		
+	trap	#13
+	jr	r31
+	nop
+.endproc _fork
+
+.proc _join
+.global _join
+_join:		
+	trap	#14
+	jr	r31
+	nop
+.endproc _join
+
+.proc _trap_srandom
+.global _trap_srandom
+_trap_srandom:		
+	trap	#15
+	jr	r31
+	nop
+.endproc _trap_srandom
+
+;
+; Math related traps.
+;
+
+.proc _trap_cos
+.global _trap_cos
+_trap_cos:
+        trap 	#20
+	jr	r31
+	nop
+.endproc _trap_cos
+
+.proc _trap_acos
+.global _trap_acos
+_trap_acos:
+        trap 	#21
+	jr	r31
+	nop
+.endproc _trap_acos
+
+.proc _trap_sin
+.global _trap_sin
+_trap_sin:
+        trap 	#22
+	jr	r31
+	nop
+.endproc _trap_sin
+
+.proc _trap_asin
+.global _trap_asin
+_trap_asin:
+        trap 	#23
+	jr	r31
+	nop
+.endproc _trap_asin
+
+.proc _trap_tan
+.global _trap_tan
+_trap_tan:
+        trap 	#24
+	jr	r31
+	nop
+.endproc _trap_tan
+
+.proc _trap_atan
+.global _trap_atan
+_trap_atan:
+        trap 	#25
+	jr	r31
+	nop
+.endproc _trap_atan
+
+.proc _trap_log10
+.global _trap_log10
+_trap_log10:
+        trap 	#26
+	jr	r31
+	nop
+.endproc _trap_log10
+
+.proc _trap_log
+.global _trap_log
+_trap_log:
+        trap 	#27
+	jr	r31
+	nop
+.endproc _trap_log
+
+.proc _trap_exp
+.global _trap_exp
+_trap_exp:
+        trap 	#28
+	jr	r31
+	nop
+.endproc _trap_exp
+
+.proc _trap_sqrt
+.global _trap_sqrt
+_trap_sqrt:		
+	trap	#29
+	jr	r31
+	nop
+.endproc _trap_sqrt
+
+.proc _trap_pow
+.global _trap_pow
+_trap_pow:
+        trap 	#30
+	jr	r31
+	nop
+.endproc _trap_pow
+
+; for the benefit of gcc.
+.proc ___main
+.global ___main
+___main:
+	jr	r31
+	nop
+.endproc ___main

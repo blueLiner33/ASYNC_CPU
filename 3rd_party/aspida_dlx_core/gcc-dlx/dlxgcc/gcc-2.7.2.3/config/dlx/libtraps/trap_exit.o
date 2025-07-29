@@ -1,0 +1,32 @@
+;;;
+;;; Stub functions for DLX traps.
+;;;
+;;; Ethan L. Miller, 1999.  Released to the public domain.
+;;;
+;;; There are two exit traps.  The first, _exitsim, actually exits the
+;;; simulator.  The second, _exit, simply calls a regular trap in the
+;;; DLX simulator, and would be suitable for a user program that wants
+;;; to signal the OS that it's exiting.
+;;;
+;;; IMPORTANT: all code that's run "native" on the simulator - OS code and
+;;; programs run without an OS - should call exitsim() rather than just
+;;; falling through to exit.
+;;;
+
+.text
+.align 2
+.proc _exitsim
+.global _exitsim
+_exitsim:
+	trap	#0x2f00
+	jr	r31
+	nop
+.endproc _exitsim
+
+.proc _exit
+.global _exit
+_exit:
+	trap	#0x300
+	jr	r31
+	nop
+.endproc _exit

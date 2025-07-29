@@ -1,0 +1,12 @@
+if [ ! -d /home/users/aspida/DLX/tools-sol2/lib/gcc-lib/dlx/2.7.2.3/include ]; then echo mkdir /home/users/aspida/DLX/tools-sol2/lib/gcc-lib/dlx/2.7.2.3/include ; \
+			         mkdir /home/users/aspida/DLX/tools-sol2/lib/gcc-lib/dlx/2.7.2.3/include ; fi
+cp crt0.o /home/users/aspida/DLX/tools-sol2/lib/gcc-lib/dlx/2.7.2.3
+cp dlx_include/* /home/users/aspida/DLX/tools-sol2/lib/gcc-lib/dlx/2.7.2.3/include
+cp dlx-ld /home/users/aspida/DLX/tools-sol2/lib/gcc-lib/dlx/2.7.2.3/ld
+cp dlx-as /home/users/aspida/DLX/tools-sol2/lib/gcc-lib/dlx/2.7.2.3/as
+cp libtraps.a ../../cc1 ../../cpp ../../cc1plus /home/users/aspida/DLX/tools-sol2/lib/gcc-lib/dlx/2.7.2.3
+cp ../../xgcc /home/users/aspida/DLX/tools-sol2/bin/gcc-dlx
+cp ../../g++-cross /home/users/aspida/DLX/tools-sol2/bin/g++-dlx
+cp dlx-ld /home/users/aspida/DLX/tools-sol2/bin/ranlib
+chmod 755 /home/users/aspida/DLX/tools-sol2/bin/gcc-dlx /home/users/aspida/DLX/tools-sol2/lib/gcc-lib/dlx/2.7.2.3/cc1 /home/users/aspida/DLX/tools-sol2/lib/gcc-lib/dlx/2.7.2.3/cpp /home/users/aspida/DLX/tools-sol2/lib/gcc-lib/dlx/2.7.2.3/as /home/users/aspida/DLX/tools-sol2/lib/gcc-lib/dlx/2.7.2.3/ld
+chmod 644 /home/users/aspida/DLX/tools-sol2/lib/gcc-lib/dlx/2.7.2.3/crt0.o /home/users/aspida/DLX/tools-sol2/lib/gcc-lib/dlx/2.7.2.3/include/math-dlx.h

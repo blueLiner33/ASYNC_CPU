@@ -1,0 +1,3 @@
+# Power Routing
+
+sroute -blocks all -blockPin allPins -noPadRings -jogControl preferSameLayer

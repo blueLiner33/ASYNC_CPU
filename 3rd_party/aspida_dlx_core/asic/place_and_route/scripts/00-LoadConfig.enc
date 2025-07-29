@@ -1,0 +1,10 @@
+# Load the Configuration File
+
+setPreference MinFPModuleSize 0
+#loadConfig ASPIDA.conf
+
+setDoAssign on -buffer buf_1
+loadConfig Default.conf
+
+setShrinkFactor 0.7
+

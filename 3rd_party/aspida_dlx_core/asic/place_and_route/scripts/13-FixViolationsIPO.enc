@@ -1,0 +1,10 @@
+# fix Tran / Timing Violations in IPO mode (Trial Route)
+
+setIPOMode -highEffort -FixDrc -restruct -noPreserveRoute -fixFanoutLoad -targetSlack 0.5 -moveInst -updateClockSkew 
+
+setAnalysisMode -setup -async -skew -clockTree -moduleIOCstr -useDetailRC -noTimeBorrowing
+updateTimingGraph
+
+fixSetupViolation
+
+

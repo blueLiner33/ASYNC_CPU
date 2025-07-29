@@ -1,0 +1,45 @@
+# Power Plan the Design
+
+# Top Bottom Left Right
+
+# Hint: Place instr/data mem @ top-left corner with halo all way out
+# and halo covering the inter-block distance.
+
+addHaloToBlock 34 34 34 34 data_ram
+addHaloToBlock 34 34 34 34 instr_ram
+
+# Core Rings
+
+# BIG METAL TRACKS REQUIRE SPACING DISTANCE OF ****1.25um**** #
+
+addRing -spacing_bottom 1.25 -width_left 80 -width_bottom 80 -width_top 80 -spacing_top 1.25 -layer_bottom Metal1 -center 1 -stacked_via_top_layer Metal5 -width_right 80 -around core -jog_distance 0.625 -offset_bottom 0.625 -layer_top Metal1 -threshold 0.625 -offset_left 0.625 -spacing_right 1.25 -spacing_left 1.25 -offset_right 0.625 -offset_top 0.625 -layer_right Metal2 -nets {vss! vdd! } -stacked_via_bottom_layer Metal1 -layer_left Metal2
+
+# Block Rings
+
+addRing -spacing_bottom 1.25 -width_left 10 -width_bottom 10 -width_top 10 -left 0 -top 0 -spacing_top 1.25 -layer_bottom Metal1 -stacked_via_top_layer Metal5 -width_right 10 -around selected -jog_distance 0.625 -offset_bottom 0.8 -layer_top Metal1 -threshold 0.625 -offset_left 0.8 -spacing_right 1.25 -spacing_left 1.25 -type block_rings -offset_right 0.8 -offset_top 0.8 -layer_right Metal2 -nets {vss! vdd! } -stacked_via_bottom_layer Metal1 -layer_left Metal2
+
+addRing -spacing_bottom 1.25 -width_left 10 -width_bottom 10 -width_top 10 -left 0 -top 0 -spacing_top 1.25 -layer_bottom Metal1 -stacked_via_top_layer Metal5 -width_right 10 -around selected -jog_distance 0.625 -offset_bottom 0.8 -layer_top Metal1 -threshold 0.625 -offset_left 0.8 -spacing_right 1.25 -spacing_left 1.25 -type block_rings -offset_right 0.8 -offset_top 0.8 -layer_right Metal2 -nets {vss! vdd! } -stacked_via_bottom_layer Metal1 -layer_left Metal2
+
+addRing -spacing_bottom 1.25 -width_left 10 -width_bottom 10 -width_top 10 -left 0 -spacing_top 1.25 -layer_bottom Metal1 -stacked_via_top_layer Metal5 -width_right 10 -around selected -jog_distance 0.625 -offset_bottom 0.8 -bottom 0 -layer_top Metal1 -threshold 0.625 -offset_left 0.8 -spacing_right 1.25 -spacing_left 1.25 -type block_rings -offset_right 0.8 -offset_top 0.8 -layer_right Metal2 -nets {vss! vdd! } -stacked_via_bottom_layer Metal1 -layer_left Metal2
+
+addRing -spacing_bottom 1.25 -width_left 10 -width_bottom 10 -width_top 10 -left 0 -spacing_top 1.25 -layer_bottom Metal1 -stacked_via_top_layer Metal5 -width_right 10 -around selected -jog_distance 0.625 -offset_bottom 0.8 -bottom 0 -layer_top Metal1 -threshold 0.625 -offset_left 0.8 -spacing_right 1.25 -spacing_left 1.25 -type block_rings -offset_right 0.8 -offset_top 0.8 -layer_right Metal2 -nets {vss! vdd! } -stacked_via_bottom_layer Metal1 -layer_left Metal2
+
+
+# Stripes
+
+addStripe -set_to_set_distance 250 -stacked_via_top_layer Metal5 -spacing 1.25 -merge_stripes_value 0.625 -layer Metal2 -width 7.5 -nets {vss! vdd! } -stacked_via_bottom_layer Metal1
+
+# Connect Block Power
+
+connectRingPin -ringPinTopBottomMinWidth 0.6 -ringPinTopBottomLayer Metal1 -ringPinLeftRightMinWidth 0.6 -ringPinTopBottomMaxWidth 1.2 -ringPinLeftRightMaxWidth 1.2 -ringPinMaxConnections 500 -stackedViaBottomLayer Metal1 -nets {vss! vdd! } -ringPinLeftRightLayer Metal2 -stackedViaTopLayer Metal5
+
+
+# Connect Core Power
+
+globalNetConnect vdd! -type pgpin -pin vdd! -inst *
+globalNetConnect vss! -type pgpin -pin vss! -inst *
+globalNetConnect vdd! -type tiehi -pin vdd! -inst *
+globalNetConnect vss! -type tielo -pin vss! -inst *
+
+connectToGlobalNet -tie_highs_lows 1 -to_global_net vdd! -verbose 0 -override_prior_global_connection 0 -in_instances * -nets {} -pins vdd! -connect Pins -under_module {}
+connectToGlobalNet -tie_highs_lows 1 -to_global_net vss! -verbose 0 -override_prior_global_connection 0 -in_instances * -nets {} -pins vss! -connect Pins -under_module {}

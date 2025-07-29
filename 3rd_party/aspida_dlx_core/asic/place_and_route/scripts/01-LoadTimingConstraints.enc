@@ -1,0 +1,3 @@
+# Load the Timing Constraint sdc file
+
+loadTimingCon aspida.sdc
