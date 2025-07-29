@@ -1,0 +1,13 @@
+;
+; Stub functions for DLX traps.
+;
+; Aaron Sawdey 1996; released to the Public Domain.
+;
+.text
+.proc _read
+.global _read
+_read:		
+	trap	#3
+	jr	r31
+	nop
+.endproc _read

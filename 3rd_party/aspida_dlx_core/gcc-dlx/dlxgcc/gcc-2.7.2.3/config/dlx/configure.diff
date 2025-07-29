@@ -1,0 +1,14 @@
+*** ../../configure.orig	Thu Jun 15 16:54:14 1995
+--- ../../configure	Mon Sep 11 17:39:37 1995
+***************
+*** 2316,2321 ****
+--- 2316,2324 ----
+  		cpu_type=we32k
+  		use_collect2=yes
+  		;;
++ 	dlx*)
++ 		cpu_type=dlx
++ 		;;
+  	*)
+  		echo "Configuration $machine not supported" 1>&2
+  		exit 1

@@ -1,0 +1,342 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>ASPIDA DLX FAQ</title>
+</head>
+<body>
+<h1>ASPIDA DLX Processor FAQ </h1>
+<hr>
+<em> The ASPIDA DLX Processor implements an asynchronous IP of the DLX
+Instruction Set Architecture (ISA) with incorporated support for ISA
+conversion so it can be easily converted to any RISC ISA. A design flow
+that is based on existing EDA tools for all design steps is used in
+order to produce a portable netlist and to distribute all the
+intermediate HDL files used for high-level and gate-level design. The
+final product is technology-independent and timing-independent and in a
+form suitable for integration using only standard, industrial tools and
+flows, with no dependence on asynchronous tools and specific knowledge
+of asynchronous design for potential end users. Both an FPGA and an
+ASIC versions have been finished and tested successfully. </em>
+<hr>
+<h2> <a href="#1"> 1. Asynchronous design </a> </h2>
+<ul>
+  <li> <a href="#1.1"> 1.1 What is a synchronous circuit? </a>
+  </li>
+  <li> <a href="#1.2"> 1.2 What is an asynchronous circuit? </a>
+  </li>
+  <li> <a href="#1.3"> 1.3 What is a "handshake"? </a>
+  </li>
+  <li> <a href="#1.4"> 1.4 What is a de-synchronized circuit? </a>
+  </li>
+</ul>
+<h2> <a href="#2"> 2. Circuit implementations </a> </h2>
+<ul>
+  <li> <a href="#2.1"> 2.1 What is an FPGA?
+    </a></li>
+  <li><a href="#2.1"> </a><a href="#2.2"> 2.2 What is an ASIC?
+    </a></li>
+  <li><a href="#2.2"> </a><a href="#2.3"> 2.3 How do I implement a
+circuit on an FPGA?
+    </a></li>
+  <li><a href="#2.3"> </a><a href="#2.4"> 2.4 What is a Hardware
+Desciption Language?
+    </a></li>
+  <li><a href="#2.4"> </a><a href="#2.5"> 2.5 How do I implement a
+circuit on ASIC?
+    </a></li>
+  <li><a href="#2.5"> </a><a href="#2.6"> 2.6 What is an ASIC design
+flow?
+    </a></li>
+</ul>
+<h2><a href="#2.6"> </a><a href="#3"> 3. The DLX processor </a> </h2>
+<ul>
+  <li> <a href="#3.1"> 3.1 What is the "DLX" ?
+    </a></li>
+  <li><a href="#3.1"> </a><a href="#3.2"> 3.2 What is a pipeline?
+    </a></li>
+  <li><a href="#3.2"> </a><a href="#3.3"> 3.3 How fast is the DLX?
+    </a></li>
+</ul>
+<h2><a href="#3.3"> </a><a href="#4"> 4. Licensing and cost </a> </h2>
+<ul>
+  <li> <a href="#4.1"> 4.1 Can I download and use DLX free of charge?
+    </a></li>
+  <li><a href="#4.1"> </a><a href="#4.2"> 4.2 Is DLX commercially
+available?
+    </a></li>
+  <li><a href="#4.2"> </a><a href="#4.3"> 4.3 How much does an FPGA
+cost?
+    </a></li>
+  <li><a href="#4.3"> </a><a href="#4.4"> 4.4 How much does the
+programming software for the FPGA cost?
+    </a></li>
+</ul>
+<h2><a href="#4.4"> </a><a href="#5"> 5. I want more! </a> </h2>
+<ul>
+  <li> <a href="#5.1"> 5.1 Who can I contact for more information?
+    </a></li>
+  <li><a href="#5.1"> </a><a href="#5.2"> 5.2 Can I write my own
+program for DLX?
+    </a></li>
+  <li><a href="#5.2"> </a><a href="#5.3"> 5.3 Has the ASIC version
+been manufactured and tested?
+    </a></li>
+  <li><a href="#5.3"> </a><a href="#5.4"> 5.4 How do I implement the
+DLX on ASIC?
+    </a></li>
+  <li><a href="#5.4"> </a><a href="#5.5"> 5.5 How do I implement the
+DLX on FPGA?</a></li>
+  <li><a href="#5.6"> 5.6 How can I implement the de-synchronizing
+controllers on the FPGA?<br>
+    </a></li>
+  <li><a href="#5.5"> </a><a href="#5.7"> 5.7 Can I see the demo
+working?
+    </a></li>
+</ul>
+<a href="#5.6"><br>
+</a>
+<hr>
+<h2><a href="#5.6"> </a><a name="1"> 1. Asynchronous design </a> </h2>
+<h3> <a name="1.1"> 1.1 What is a synchronous circuit? </a> </h3>
+Synchronous circuits typically consist of a set of combinational
+logic clouds seperated by registers. The combinational logic clouds
+perform predefined computations and pass the results to a neighbouring
+combinational logic cloud through the registers. The registers store
+the results of the computations preventing overwriting of the data. The
+registers are controlled by a global clock, which dictates when the
+registers are to accept a new value and store it.
+<h3> <a name="1.2"> 1.2 What is an asynchronous circuit? </a> </h3>
+An asynchronous circuit consists of a set of combinational logic
+clouds seperated by latches. Unlike synchronous circuits, the latches
+of the asynchronous circuits are not controlled by a global clock, but
+by a set of controllers. These controllers control the flow of the data
+in the circuit, by performing handshakes, using a communication
+protocol with their neighbouring controllers.
+<h3> <a name="1.3"> 1.3 What is a "handshake"? </a> </h3>
+A handshake is a communication protocol which was originally devised
+for
+shared buses. The most commonly used handshake mechanisms are the
+two-phase
+and four-phase ones.
+<center><img src="faq_files/4phase.gif"></center>
+In the four-phase handshake the request and acknowledge signals
+return to zero to complete the handshake. Data change when the
+handshake is
+complete.
+<center><img src="faq_files/2phase.gif"></center>
+In the two-phase handshake the data change whenever both the request
+and
+the acknowledge change polarity.
+<h3> <a name="1.4"> 1.4 What is a de-synchronized circuit? </a> </h3>
+A de-synchronized circuit is an asynchronous circuit which has
+been produced by a synchronous one after removing the global clock and
+replacing it with a set of controllers. The set of controllers performs
+the flow control locally, as it is done in asynchronous circuits.
+<br>
+<br>
+<hr>
+<h2> <a name="2"> 2. Circuit implementations </a> </h2>
+<h3> <a name="2.1"> 2.1 What is an FPGA? </a> </h3>
+FPGA stands for "Field Programmable Gate Array". The array
+can be programmed by a special software, in order to implement a
+circuit. It can be programmed in a lab, as the only requirements are
+the FPGA, the programming software and the circuit described in a
+hardware description language. They are reusable and a low cost
+solution for the implementation of digital circuits.
+<h3> <a name="2.2"> 2.2 What is an ASIC? </a> </h3>
+ASIC stands for "Application Specific Integrated Circuit". An
+ASIC, unlike FPGAs, cannot be implemented in a lab, but only in a
+fabrication facility. The fabrication procedure is complicated and
+expensive. Once manufactured, an ASIC cannot be altered. ASIC
+implementation is essential in high end implementations.
+<h3> <a name="2.3"> 2.3 How do I implement a circuit on an FPGA? </a>
+</h3>
+You only need the FPGA, the programming software and a computer.
+You also need to have described the circuit in a hardware description
+language. The two heavyweight FPGA manufacturers are
+<a href="http://www.xilinx.com">Xilinx</a> and <a
+ href="http://www.altera.com">Altera</a>.
+<h3> <a name="2.4"> 2.4 What is a Hardware Desciption Language? </a> </h3>
+Hardware description languages are high level languages which
+describe the functionality of the circuit and how it is supposed to be
+implemented. There is a wide range of HDLs, the most commong being
+<a href="http://en.wikipedia.org/wiki/Verilog">Verilog</a> and <a
+ href="http://en.wikipedia.org/wiki/VHDL">VHDL</a>.
+<h3> <a name="2.5"> 2.5 How do I implement a circuit on ASIC? </a> </h3>
+You need to specify the circuit in a HDL, and then use special
+software in order to implement it. You have to follow the ASIC design
+flow
+to the end and then send the design to a fabrication facility.
+<h3> <a name="2.6"> 2.6 What is an ASIC design flow? </a> </h3>
+A design flow consists of all of the steps that need to be
+followed for a design to be implemented. It typically consists of the
+description of the circuit in an HDL, the synthesis, the placement and
+the routing. After that, the design can be sent for fabrication.
+<br>
+<br>
+<hr>
+<h2> <a name="3"> 3. The DLX processor </a> </h2>
+<h3> <a name="3.1"> 3.1 What is the "DLX" ? </a> </h3>
+DLX is a processor introduced by Hennesey and Patterson. It is
+widely used for educational purposes and appears in a range of
+textbooks. It has five pipeline stages and contains two basic building
+blocks, an ALU and a register file.
+<h3> <a name="3.2"> 3.2 What is a pipeline? </a> </h3>
+<p> A pipeline is a way of making concurrent computations, which
+increases the speed of the overall execution, compared to a serial
+computation. In a pipeline, all computational logic blocks, which have
+something to do, make computations at the same time. </p>
+<center><img src="faq_files/dlx.png"></center>
+<p> In the DLX pipeline, there are 5 stages: Instruction Fetch (IF),
+Instruction Decode (ID), Execution (EXE), Memory Access (MEM) and
+Register
+Writeback (WB). After the initial filling stages, all 5 stages are
+active
+executing 5 successive instructions at a time. </p>
+<p> In a synchronous pipeline, the register stages also exchange their
+results at the same time, in predefined time slots. In an asynchronous
+circuit, they make agreements with their neighbouring combinational
+logic
+clouds, when to exchange results. </p>
+<h3> <a name="3.3"> 3.3 How fast is the DLX? </a> </h3>
+Our ASIC implementation of DLX, can run as fast as 77MHz both in
+the synchronous and the asynchronous implementation. Our FPGA
+implementation runs at 13.7 MHz. <br>
+<br>
+<hr>
+<h2> <a name="4"> 4. Licensing and cost </a> </h2>
+<h3> <a name="4.1"> 4.1 Can I download and use DLX free of charge? </a>
+</h3>
+Yes, you can download our implementation of DLX from our <a
+ href="http://www.ics.forth.gr/carv/async/ASPIDA">web site</a> or our
+<a href="ftp://139.91.184.6/pub/ASPIDA">FTP site</a>. Your are welcome
+to
+implement DLX on your FPGA, but for the ASIC version, you need to send
+it to a fabrication facility, which is not free of charge.
+<h3> <a name="4.2"> 4.2 Is DLX commercially available? </a> </h3>
+DLX is not commercially availabe. It is protected from the
+General Public License. It is freely available under this license.
+<h3> <a name="4.3"> 4.3 How much does an FPGA cost? </a> </h3>
+There is a wide range of FPGAs, from very low end to very high
+end. The price of these devices is defined according to their
+capabilities. In our implementation, we used a very low cost FPGA,
+which is available for no more than $100. You can find a complete
+pricelist at <a href="http://www.digilentinc.com">www.digilentinc.com</a>.
+<h3> <a name="4.4"> 4.4 How much does the programming software for the
+FPGA cost? </a> </h3>
+Both <a href="http://www.xilinx.com">Xilinx</a> and <a
+ href="http://www.altera.com">Altera</a> offer free versions
+of their programming software, which include all the essential
+functionality for the implemetation of a design, even our DLX. If you
+want a full version, you need to contact the vendors for a pricelist. <br>
+<br>
+<hr>
+<h2> <a name="5"> 5. I want more! </a> </h2>
+<h3> <a name="5.1"> 5.1 Who can I contact for more information? </a> </h3>
+You can contact <a href="mailto:sotiriou@ics.forth.gr"> Christos
+Sotiriou
+</a> for more information regarding this project. Take a look at our
+Asynchronous group <a href="http://www.ics.forth.gr/carv/async">web
+site</a>!
+<h3> <a name="5.2"> 5.2 Can I write my own program for DLX? </a> </h3>
+Sure, there is a C compiler, which provides DLX assembly. You
+just need to download this compiler from our <a
+ href="http://www.ics.forth.gr/carv/async/ASPIDA/GCC-DLX">web site</a>
+or our
+<a href="ftp://139.91.184.6/pub/ASPIDA/GCC-DLX">FTP site</a>
+and use the appropriate link libraries.
+<h3> <a name="5.3"> 5.3 Has the ASIC version been manufactured and
+tested? </a> </h3>
+<p> Yes, the ASIC version has been manufactured and tested. The tests
+have been
+a success and we now have a lot of fully working ASIC ASPIDA chips.
+Here's
+a photo (click it for a larger one). The two left-side boxes are the
+Instruction Cache and the Data Cache.</p>
+<center><a href="faq_files/aspida_large.gif"><img
+ src="faq_files/aspida_small.gif"></a></center>
+<p> You can also see a photo during the chip testing. More photos are
+available <a
+ href="ftp://139.91.184.6/pub/ASPIDA/ASIC-Testing-Run1/Photos">here</a>.
+</p>
+<center><a href="faq_files/testing_large.jpg"><img
+ src="faq_files/testing_small.jpg"></a></center>
+<h3> <a name="5.4"> 5.4 How do I implement the DLX on ASIC? </a> </h3>
+You have to follow a synthesis, place and route flow. The flow we
+used in our implementation is <a href="faq_files/ASICSPR.html">
+this one</a>.
+<h3> <a name="5.5"> 5.5 How do I implement the DLX on FPGA? </a> </h3>
+<p> If you want to implement the synchronous version, download the
+source
+files <a
+ href="ftp://139.91.184.6/pub/ASPIDA/openDLX-Synchronous-FPGA/Verilog-FPGA-Xilinx/">
+here</a> and follow the synthesis and place and route
+procedure of the Xilinx ISE tool. If you want to implement the
+de-synchronized version, download the source files
+<a
+ href="ftp://139.91.184.6/pub/ASPIDA/openDLX-Desynchronised-FPGA/Verilog-FPGA-Xilinx/">here</a>
+and follow the same synthesis and place
+and route procedure as above. </p>
+<p> If you just want to simulate the placed and
+routed DLXs, download the Verilog and SDF files:
+<a
+ href="ftp://139.91.184.6/pub/ASPIDA/openDLX-Desynchronised-FPGA/Gate-Level-SPARTAN2E/">de-synchronized</a>
+or <a
+ href="ftp://139.91.184.6/pub/ASPIDA/openDLX-Synchronous-FPGA/Gate-Level-SPARTAN2E/">synchronous</a>.
+</p>
+<p> Finally, if you want to just download the DLXs to an FPGA, download
+the
+appropriate bitfile:
+<a
+ href="ftp://139.91.184.6/pub/ASPIDA/openDLX-Desynchronised-FPGA/Bitfile/">de-synchronized</a>
+or
+<a
+ href="ftp://139.91.184.6/pub/ASPIDA/openDLX-Synchronous-FPGA/Bitfile/">synchronous</a>.<br>
+</p>
+<h3><a name="5.6"> 5.6 </a>How can I implement the de-synchronizing
+controllers on the FPGA?</h3>
+<p> The de-synchronizing controllers that are used in the FPGA version of
+DLS are semi-decoupled controllers. </p>
+<center><img src="faq_files/controller.gif"></center>
+<p> They consist of a "master" part and a "slave" part and the verilog
+description can be found 
+<a href="faq_files/controllers/contr_ver.html">here</a>.</p>
+<p>
+The complete de-synchronizing controller of DLX includes the "master"
+and "slave" parts along with a pulse delay
+and a matched delay. The pulse delay is just an inverter chain. A
+verilog description of the pulse delay can be found <a
+ href="faq_files/controllers/pulse_delay.html">here</a>.
+The "KEEP" constraints are essential, otherwise the ISE software will
+optimize out the inverters.</p>
+<p>
+A verilog description of the matched delay can be found <a
+ href="faq_files/controllers/matched_delay.html">here</a>. The
+synthesis attributes are essential so that the chain
+of AND-gates, which implement the assymetric matched delay, are not
+optimized out by the tool.</p>
+<p>
+The complete controller verilog description can be found <a
+ href="faq_files/controllers/controller.html">here</a>.</p>
+
+<h3> <a name="5.7"> 5.7 Can I see the demo working? </a> </h3>
+<p> Sure, you can download movies which show the DLX executing "the
+game of
+life" <a href="ftp://139.91.184.6/pub/ASPIDA/DEMO/Movies/">here</a>.
+The
+DLX runs a program which fills memory locations with a bit-mapped
+matrix of
+the game screen. In the demo board, a VGA controller is displaying the
+memory matrix onto the monitor. </p>
+<p> You can also see our lab setup. </p>
+<center> <a href="faq_files/lab_large.jpg"><img
+ src="faq_files/lab_small.jpg"></a></center>
+<p> More photos available
+<a href="ftp://139.91.184.6/pub/ASPIDA/DEMO/Photos/">here</a>. </p>
+<br>
+<br>
+<hr>Created by the <a href="http://www.ics.forth.gr/carv/async">ASYNC
+group</a>
+of the <a href="http://www.ics.forth.gr">ICS-FORTH</a>
+</body>
+</html>

@@ -1,0 +1,267 @@
+ line   address	contents
+    1                      ; Linked by DLX-LD.
+    2                      ; MemSize 12288
+    3                      ; Data size: 116
+    4                      ; Text size: 736
+    5                      ; Stack size: 8192
+    6  00000000          	.text 0x0000
+    7  00000000          	.data 0x0800
+    8                      ;;; Ethan L. Miller, 1999.  Released to the public domain
+    9                      ;;;
+   10                      ;;; Most of the traps are called in files from libtraps.
+   11  00000800          	.text
+   12  00000000          	.align 2
+   13  00000000          	.proc ___init_LF0
+   14  00000000  3c1d0000	lhi	r29,0x0000
+   15  00000004  241d0ffc	addui	r29,r0,0x0FFC
+   16  00000008  03a0f020	add	r30,r29,r0
+   17  0000000c  0c000118	jal	_main
+   18  00000010  54000000	nop
+   19  00000014          	.endproc ___init_LF0
+   22  00000014          	.align 2
+   23  00000014          	.proc _exit
+   24  00000014          	.global _exit
+   25  00000014          	_exit:
+   26  00000014  44000300	trap	0x300
+   27  00000018  4be00000	jr	r31
+   28  0000001c  54000000	nop
+   29  00000020          	.endproc _exit
+   31                      ; for the benefit of gcc.
+   33  00000020          	.align 2
+   34  00000020          	.proc ___main
+   35  00000020          	.global ___main
+   36  00000020          	___main:
+   37  00000020  4be00000	jr	r31
+   38  00000024  54000000	nop
+   39  00000028          	.endproc ___main
+   41                      ; Trap Handler
+   43  00000028          	.align 7
+   44  00000080          	___trap_LF0:
+   45  00000080  54000000	nop
+   46  00000084  54000000	nop
+   47  00000088  54000000	nop
+   48  0000008c  1000fff0	beqz	r0,___trap_LF0
+   49  00000090  54000000	nop
+   50  00000094  54000000	nop
+   51  00000098  54000000	nop
+   52                      ; Compiled by GCC
+   54  0000009c          	.align 2
+   55  0000009c          	.proc _fac
+   56  0000009c          	.global _fac
+   57  0000009c          	_fac:
+   58                      ;  Function 'fac'; 0 bytes of locals, 2 regs to save.
+   59  0000009c  afbefffc	sw	-4(r29),r30; push fp
+   60  000000a0  001df020	add	r30,r0,r29; fp = sp
+   61  000000a4  afbffff8	sw	-8(r29),r31; push ret addr
+   62  000000a8  2fbd0010	subui	r29,r29,16; alloc local storage
+   63  000000ac  afa20000	sw	0(r29),r2
+   64  000000b0  afa30004	sw	4(r29),r3
+   65  000000b4  8fc30000	lw	r3,(r30)
+   66  000000b8  6c610001	sgti	r1,r3,1
+   67  000000bc  10200044	beqz	r1,L2_LF1
+   68  000000c0  54000000	nop; not filled.
+   69  000000c4  23bdfff8	addi	r29,r29,-8
+   70  000000c8  2061ffff	addi	r1,r3,-1
+   71  000000cc  afa10000	sw	(r29),r1
+   72  000000d0  0fffffc8	jal	_fac
+   73  000000d4  54000000	nop; not filled.
+   74  000000d8  23bd0008	addi	r29,r29,8
+   75  000000dc  00011020	add	r2,r0,r1
+   76  000000e0  23bdfff8	addi	r29,r29,-8
+   77  000000e4  afa30000	sw	(r29),r3
+   78  000000e8  afa20004	sw	4(r29),r2
+   79  000000ec  0c000128	jal	_mult
+   80  000000f0  54000000	nop; delay slot nop
+   81  000000f4  23bd0008	addi	r29,r29,8
+   82  000000f8  00011020	add	r2,r0,r1
+   83  000000fc  08000008	j	L3_LF1
+   84  00000100  54000000	nop; not filled.
+   85  00000104          	L2_LF1:
+   86  00000104  20020001	addi	r2,r0,1
+   87  00000108          	L3_LF1:
+   88  00000108  00020820	add	r1,r0,r2
+   89  0000010c  8fa20000	lw	r2,0(r29)
+   90  00000110  8fa30004	lw	r3,4(r29)
+   91  00000114  8fdffff8	lw	r31,-8(r30)
+   92  00000118  001ee820	add	r29,r0,r30
+   93  0000011c  8fdefffc	lw	r30,-4(r30)
+   94  00000120  4be00000	jr	r31
+   95  00000124  54000000	nop
+   96  00000128          	.endproc _fac
+   97  00000128          	.align 2
+   98  00000128          	.proc _main
+   99  00000128          	.global _main
+  100  00000128          	_main:
+  101                      ;  Function 'main'; 0 bytes of locals, 0 regs to save.
+  102  00000128  afbefffc	sw	-4(r29),r30; push fp
+  103  0000012c  001df020	add	r30,r0,r29; fp = sp
+  104  00000130  afbffff8	sw	-8(r29),r31; push ret addr
+  105  00000134  2fbd0008	subui	r29,r29,8; alloc local storage
+  106  00000138  0ffffee4	jal	___main
+  107  0000013c  54000000	nop; not filled.
+  108  00000140  20020000	addi	r2,r0,0
+  109  00000144  3c050000	lhi	r5,((_results_int)>>16)&0xffff
+  110  00000148  24a50800	addui	r5,r5,(_results_int)&0xffff
+  111  0000014c  3c040000	lhi	r4,((_results_short)>>16)&0xffff
+  112  00000150  24840818	addui	r4,r4,(_results_short)&0xffff
+  113  00000154  3c030000	lhi	r3,((_results_char)>>16)&0xffff
+  114  00000158  24630824	addui	r3,r3,(_results_char)&0xffff
+  115  0000015c          	L8_LF1:
+  116  0000015c  23bdfff8	addi	r29,r29,-8
+  117  00000160  afa20000	sw	(r29),r2
+  118  00000164  0fffff34	jal	_fac
+  119  00000168  54000000	nop; not filled.
+  120  0000016c  a0610000	sb	(r3),r1
+  121  00000170  302100ff	andi	r1,r1,0x00ff
+  122  00000174  a4810000	sh	(r4),r1
+  123  00000178  50210010	slli	r1,r1,16
+  124  0000017c  5c210010	srai	r1,r1,16
+  125  00000180  aca10000	sw	(r5),r1
+  126  00000184  23bd0008	addi	r29,r29,8
+  127  00000188  20a50004	addi	r5,r5,4
+  128  0000018c  20840002	addi	r4,r4,2
+  129  00000190  20630001	addi	r3,r3,1
+  130  00000194  20420001	addi	r2,r2,1
+  131  00000198  70410005	slei	r1,r2,5
+  132  0000019c  1420ffbc	bnez	r1,L8_LF1
+  133  000001a0  54000000	nop; not filled.
+  134  000001a4  3c010000	lhi	r1,((_final)>>16)&0xffff
+  135  000001a8  2421082c	addui	r1,r1,(_final)&0xffff
+  136  000001ac  203f0030	addi	r31,r1,48
+  137  000001b0  3c060000	lhi	r6,((_results_char)>>16)&0xffff
+  138  000001b4  24c60824	addui	r6,r6,(_results_char)&0xffff
+  139  000001b8  20250018	addi	r5,r1,24
+  140  000001bc  3c040000	lhi	r4,((_results_short)>>16)&0xffff
+  141  000001c0  24840818	addui	r4,r4,(_results_short)&0xffff
+  142  000001c4  00011020	add	r2,r0,r1
+  143  000001c8  3c030000	lhi	r3,((_results_int)>>16)&0xffff
+  144  000001cc  24630800	addui	r3,r3,(_results_int)&0xffff
+  145  000001d0  20470044	addi	r7,r2,68
+  146  000001d4          	L13_LF1:
+  147  000001d4  8c680000	lw	r8,(r3)
+  148  000001d8  ac480000	sw	(r2),r8
+  149  000001dc  84810000	lh	r1,(r4)
+  150  000001e0  aca10000	sw	(r5),r1
+  151  000001e4  90c10000	lbu	r1,(r6)
+  152  000001e8  afe10000	sw	(r31),r1
+  153  000001ec  23ff0004	addi	r31,r31,4
+  154  000001f0  20c60001	addi	r6,r6,1
+  155  000001f4  20a50004	addi	r5,r5,4
+  156  000001f8  20840002	addi	r4,r4,2
+  157  000001fc  20420004	addi	r2,r2,4
+  158  00000200  20630004	addi	r3,r3,4
+  159  00000204  03e7082c	sle	r1,r31,r7
+  160  00000208  1420ffc8	bnez	r1,L13_LF1
+  161  0000020c  54000000	nop; not filled.
+  162  00000210  0ffffe00	jal	_exit
+  163  00000214  54000000	nop
+  164  00000218          	.endproc _main
+  165  00000218          	.data
+  166  00000800          	.align 2
+  167  00000800          	.global _results_int
+  168  00000800          	_results_int:
+  169  00000800          	.space 24
+  170  00000818          	.align 1
+  171  00000818          	.global _results_short
+  172  00000818          	_results_short:
+  173  00000818          	.space 12
+  174  00000824          	.global _results_char
+  175  00000824          	_results_char:
+  176  00000824          	.space 6
+  177  0000082a          	.align 2
+  178  0000082c          	.global _final
+  179  0000082c          	_final:
+  180  0000082c          	.space 72
+  185                      ;---------------------------------------------------------------------------------------
+  186                      ;
+  187                      ; MULT --- MULT --- MULT --- MULT --- MULT --- MULT
+  188                      ;
+  189                      ; Signed 32 x 32 -> 32 bit Multiply routine
+  190                      ; 
+  191                      ; This version takes the two operands from the stack (dividend and divisor in the
+  192                      ; order) and returns in r1 the result according to the standard C call
+  193                      ; c = mult(a,b);
+  194                      ; register r29 is assumed to be the stack pointer
+  195                      ; all other used registers are saved into the stack and restored on the return
+  196                      ;
+  197                      ; For internal debugging purposes this is the internal use of the registers
+  198                      ;  r5 multiplicand
+  199                      ;  r6 multiplier
+  200                      ;  r7 result
+  201                      ;  r1 counter
+  202                      ;  r2 mask
+  203                      ;  r3 scratch
+  204                      ;		
+  205                      ;  r29 Stack pointer
+  206                      ;  r30 Frame Pointer
+  207                      ;  r31 Return address
+  208                      ;
+  209                      ; F.Gregoretti January 7th 2004
+  210                      ; 
+  211  00000874          	.text
+  213  00000218          	.align 2
+  215  00000218          	.proc _mult
+  217  00000218          	.global _mult
+  219  00000218          	_mult:; initial operations
+  220  00000218  afbefffc	sw	-4(r29),r30; save frame pointer
+  221  0000021c  03a0f020	add	r30,r29,r0; new fp = sp
+  222  00000220  2fbd001c	subui	r29,r29,#28; allocate space for saving registers  in the stack
+  223  00000224  afa20000	sw	0(r29),r2; save r2
+  224  00000228  afa30004	sw	4(r29),r3; save r3
+  225  0000022c  afa50008	sw	8(r29),r5; save r5
+  226  00000230  afa6000c	sw	12(r29),r6; save r6
+  227  00000234  afa70010	sw	16(r29),r7; save r7
+  228  00000238  afa80010	sw	16(r29),r8; save r7				;
+  229  0000023c  8fc50000	lw	r5,0(r30); load multiplicand from the stack
+  230  00000240  8fc60004	lw	r6,4(r30); load multiplier from the stack
+  231  00000244  00004020	add	r8,r0,r0; Clear r8
+  232  00000248  0005182b	sgt	r3,r0,r5; test dividend  r3 = 0 if positive)
+  233  0000024c  1060000c	beqz	r3,m0_pos1_LF2
+  235  00000250  54000000	nop
+  237  00000254  21080001	addi	r8,r8,#1; sets flag
+  238  00000258  00052822	sub	r5,r0,r5; changes sign to the multiplicand
+  239  0000025c          	m0_pos1_LF2:
+  241  0000025c  0006182b	sgt	r3,r0,r6; test divisor
+  242  00000260  1060000c	beqz	r3,m0_pos2_LF2
+  244  00000264  54000000	nop; delay slot
+  245  00000268  29080001	subi	r8,r8,#1; sets flag 
+  246  0000026c  00063022	sub	r6,r0,r6; changes sign to the multiplier
+  247  00000270          	m0_pos2_LF2:; flag = 0 if dividend and divisor are both pos or neg				;
+  248  00000270  20010020	addi	r1,r0,#32; set counter r1 to 32
+  249  00000274  20020001	addi	r2,r0,#1; create mask on LSB with r2
+  250  00000278  00003820	add	r7,r0,r0
+  252  0000027c          	m0_loop_LF2:
+  254  0000027c  00061820	add	r3,r0,r6; moves r6 into r3
+  255  00000280  00621824	and	r3,r3,r2; r3 has the value of the LSB of r6
+  256  00000284  10600008	beqz	r3,m0_noadd_LF2; bit is 0
+  257  00000288  54000000	nop
+  259  0000028c  00e53820	add	r7,r7,r5; bit is 1 - addition
+  260  00000290          	m0_noadd_LF2:
+  262  00000290  58c60001	srli	r6,r6,#1; shift right the multiplier to test next bit
+  263  00000294  50a50001	slli	r5,r5,#1; shift left the multiplicand to multiply by 2
+  264  00000298  28210001	subi	r1,r1,#1; decrement the counter
+  265  0000029c  1420ffdc	bnez	r1,m0_loop_LF2
+  267  000002a0  54000000	nop
+  269  000002a4  11000008	beqz	r8,m0_endmul_LF2; test for sign of the result
+  270  000002a8  54000000	nop
+  272  000002ac  00073822	sub	r7,r0,r7
+  274  000002b0          	m0_endmul_LF2:
+  276  000002b0  00070820	add	r1,r0,r7; put result into r1
+  277  000002b4  8fa70010	lw	r7,16(r29); restore r7
+  278  000002b8  8fa6000c	lw	r6,12(r29); restore r6
+  279  000002bc  8fa50008	lw	r5,8(r29); restore r5
+  280  000002c0  8fa30004	lw	r3,4(r29); restore r3
+  281  000002c4  8fa20000	lw	r2,0(r29); restore r2
+  282  000002c8  03c0e820	add	r29,r30,r0; restore stack pointer
+  283  000002cc  8fbefffc	lw	r30,-4(r29); restore old frame pointer
+  284  000002d0  4be00000	jr	r31; return from subroutine
+  285  000002d4  54000000	nop
+  287  000002d8  54000000	nop
+  289  000002dc  54000000	nop
+  293  000002e0          	.text
+  294  000002e0          	.global _etext
+  295  000002e0          	_etext:
+  296  000002e0          	.align 3
+  297  000002e0          	.data
+  298  00000874          	.global _edata
+  299  00000874          	_edata:

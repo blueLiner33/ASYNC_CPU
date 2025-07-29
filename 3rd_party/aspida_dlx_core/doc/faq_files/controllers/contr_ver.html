@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>ASPIDA ASIC SYNTHESIS, PLACE AND ROUTE</title>
+</head>
+<body>
+// SEMI-DECOUPLED Controllers //<br>
+&nbsp; <br>
+module master_ctrl(rst, ri, ai, ro, ao, l);<br>
+<br>
+input rst, ri, ao;<br>
+output l, ai, ro;<br>
+<br>
+wire nl;<br>
+wire nrst, lninp1, lninp2;<br>
+wire roainp;<br>
+wire ridp1,ridp2,ridp3;<br>
+<br>
+&nbsp;not dnot (nridm, ri);<br>
+<br>
+&nbsp;not rnot (nrst, rst);<br>
+&nbsp;<br>
+&nbsp;nand rnand (ainrst, ai, nrst);<br>
+&nbsp;<br>
+// nor (ainrst, ai, rst);<br>
+&nbsp;<br>
+&nbsp;and andl1 (lninp1, ainrst, nridm);<br>
+&nbsp;and andl2 (lninp2, ro, ao, nridm);<br>
+&nbsp;<br>
+&nbsp;nor norl (nl, lninp1, lninp2);<br>
+&nbsp;assign ai = nl; <br>
+<br>
+&nbsp;not notl (l, nl);<br>
+&nbsp;<br>
+&nbsp;not notro (nro, ro);<br>
+&nbsp;and andro (roainp, nro, ao);<br>
+&nbsp;nor norro (ro, roainp, l);<br>
+<br>
+endmodule<br>
+<br>
+module slave_ctrl(rst, ri, ai, ro, ao, l);<br>
+<br>
+input rst, ri, ao;<br>
+output l, ai, ro;<br>
+<br>
+wire nl;<br>
+wire nrst, lninp1, lninp2;<br>
+wire roainp;<br>
+wire ridp1,ridp2,ridp3;<br>
+<br>
+&nbsp;not dnot (nridm, ri);<br>
+<br>
+// not rnot (nrst, rst);<br>
+&nbsp;<br>
+// nand rnand (ainrst, ai, nrst);<br>
+&nbsp;<br>
+&nbsp;nor (ainrst, ai, rst);<br>
+&nbsp;<br>
+&nbsp;and andl1 (lninp1, ainrst, nridm);<br>
+&nbsp;and andl2 (lninp2, ro, ao, nridm);<br>
+&nbsp;<br>
+&nbsp;nor norl (nl, lninp1, lninp2);<br>
+&nbsp;assign ai = nl; <br>
+<br>
+&nbsp;not notl (l, nl);<br>
+&nbsp;<br>
+&nbsp;not notro (nro, ro);<br>
+&nbsp;and andro (roainp, nro, ao);<br>
+&nbsp;nor norro (ro, roainp, rst, l);<br>
+<br>
+endmodule<br>
+</body>
+</html>

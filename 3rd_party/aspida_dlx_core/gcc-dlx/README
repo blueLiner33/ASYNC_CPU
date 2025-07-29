@@ -1,0 +1,81 @@
+DLX compilation toolchain package
+---------------------------------
+
+In order to use the compilation toolchain for the DLX processor, it is
+sufficient to install directory tools-sol2 in the wanted position. For
+instance, if <install_dir> is the place where tools-sol2 should go, the
+following commands will install the toolchain (assuming csh):
+
+  % cd <install_dir>
+  % tar cf - -C <path_to_dlx_packages> tools-sol2 | tar xf -
+  % set path = (<install_dir>/tools-sol2/bin <install_dir>/tools-sol2/lib/gcc-lib/dlx/2.7.2.3 $path)
+  % rehash
+
+You might want to add setting of the path in your .cshrc as well.
+Then, to compile a simple application of a single file containing the
+main() function, use the following steps:
+
+  % gcc-dlx -mtraps -o nomefile.s nomefile.c
+  % dlxasm -o nomefile.o nomefile.s
+  % dlxdump nomefile.o instr.hex
+  % dlxsim -x nomefile.o -e
+  
+The above programs may accept additional options to get better
+optimizations or generate traces or memory dumps. The file instr.hex can
+be used to make a verilog simulation.
+
+A more complete example involves several source files. Generate the
+various assembler sources with the command:
+
+  % gcc-dlx -c -o nomefile_i.s nomefile_i.c
+
+Note the difference with respect to the previous command, where -mtraps
+was used to include __main and _exit. In the present case, those
+functions are not generated. Then link all the files with the command:
+
+  % gcc-ld -o nomefile.s nomefile_1.s ... nomefile_i.s <install_dir>/tools-sol2/lib/gcc-lib/dlx/2.7.2.3/crt0.s
+  
+crt0.s can be copied in the current directory and provides
+implementation of functions __main and _exit. Then follow the previous
+procedure, with dlxasm, dlxdump and dlxsim in sequence.
+
+
+Compilation of the various packages
+-----------------------------------
+
+* GCC 2.7.2.3
+
+  % cd <path_to_dlx_packages>/dlxgcc/gcc-2.7.2.3
+  % make clean
+  % rm config.status
+  % cd config/dlx
+  % vi Makefile
+    change variable PREFIX to point to <install_dir>/tools-sol2
+  % make clean
+  % make
+  % make install
+  % cp crt0.s <install_dir>/tools-sol2/lib/gcc-lib/dlx/2.7.2.3
+  
+  Check that <install_dir>/tools-sol2/bin/gcc-ld is a symbolic link to
+  ranlib
+  
+  
+* DLXASM
+
+  The program is a perl script. Just modify it and then copy the script
+  to <install_dir>/tools-sol2/bin.
+  
+
+* DLXDUMP
+
+  % cd <path_to_dlx_packages>/dlxdump
+  % gcc -o dlxdump dlxdump.c
+  % cp dlxdump <install_dir>/tools-sol2/bin
+  
+
+* DLXSIM
+
+  % cd <path_to_dlx_packages>/dlxsim-sol2
+  % make clean
+  % make
+  % cp dlxsim <install_dir>/tools-sol2/bin

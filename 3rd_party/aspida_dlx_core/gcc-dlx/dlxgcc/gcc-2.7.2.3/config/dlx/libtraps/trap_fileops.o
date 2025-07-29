@@ -1,0 +1,95 @@
+;;;
+;;; Stub functions for DLX traps.
+;;;
+;;; Ethan L. Miller, 1999.  Released to the public domain.
+;;;
+;;; There are two sets of traps here.  The traps such as Open and Close
+;;; (note the capital letters) are for use by user programs.  The traps
+;;; with names such as open and close (lower case) are for use by the OS.
+;;;
+
+	.text
+	.align 2
+.proc _open
+.global _open
+_open:		
+	trap	#0x2013
+	jr	r31
+	nop
+.endproc _open
+
+.proc _close
+.global _close
+_close:		
+	trap	#0x2014
+	jr	r31
+	nop
+.endproc _close
+
+.proc _read
+.global _read
+_read:		
+	trap	#0x2010
+	jr	r31
+	nop
+.endproc _read
+
+.proc _write
+.global _write
+_write:		
+	trap	#0x2011
+	jr	r31
+	nop
+.endproc _write
+
+.proc _lseek
+.global _lseek
+_lseek:		
+	trap	#0x2012
+	jr	r31
+	nop
+.endproc _lseek
+
+;;; The following are the traps to be used by user-level programs
+;;;
+		.text
+	.align 2
+.proc _Open
+.global _Open
+_Open:		
+	trap	#0x213
+	jr	r31
+	nop
+.endproc _Open
+
+.proc _Close
+.global _Close
+_Close:		
+	trap	#0x214
+	jr	r31
+	nop
+.endproc _Close
+
+.proc _Read
+.global _Read
+_Read:		
+	trap	#0x210
+	jr	r31
+	nop
+.endproc _Read
+
+.proc _Write
+.global _Write
+_Write:		
+	trap	#0x211
+	jr	r31
+	nop
+.endproc _Write
+
+.proc _Lseek
+.global _Lseek
+_Lseek:		
+	trap	#0x212
+	jr	r31
+	nop
+.endproc _Lseek

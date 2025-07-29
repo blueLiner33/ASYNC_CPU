@@ -1,0 +1,93 @@
+;
+; Stub functions for DLX traps.
+;
+; Aaron Sawdey 1996; released to the Public Domain.
+;
+.text
+.proc _cos
+.global _cos
+_cos:
+        trap 	#20
+	jr	r31
+	nop
+.endproc _cos
+
+.proc _acos
+.global _acos
+_acos:
+        trap 	#21
+	jr	r31
+	nop
+.endproc _acos
+
+.proc _sin
+.global _sin
+_sin:
+        trap 	#22
+	jr	r31
+	nop
+.endproc _sin
+
+.proc _asin
+.global _asin
+_asin:
+        trap 	#23
+	jr	r31
+	nop
+.endproc _asin
+
+.proc _tan
+.global _tan
+_tan:
+        trap 	#24
+	jr	r31
+	nop
+.endproc _tan
+
+.proc _atan
+.global _atan
+_atan:
+        trap 	#25
+	jr	r31
+	nop
+.endproc _atan
+
+.proc _log10
+.global _log10
+_log10:
+        trap 	#26
+	jr	r31
+	nop
+.endproc _log10
+
+.proc _log
+.global _log
+_log:
+        trap 	#27
+	jr	r31
+	nop
+.endproc _log
+
+.proc _exp
+.global _exp
+_exp:
+        trap 	#28
+	jr	r31
+	nop
+.endproc _exp
+
+.proc _sqrt
+.global _sqrt
+_sqrt:		
+	trap	#29
+	jr	r31
+	nop
+.endproc _sqrt
+
+.proc _pow
+.global _pow
+_pow:
+        trap 	#30
+	jr	r31
+	nop
+.endproc _pow

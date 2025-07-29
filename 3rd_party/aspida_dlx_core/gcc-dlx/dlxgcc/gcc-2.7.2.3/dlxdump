@@ -1,0 +1,1 @@
+hexdump -v -f ./str_dump $*

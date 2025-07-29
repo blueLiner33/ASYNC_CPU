@@ -1,0 +1,39 @@
+===========================================================================
+./doc
+===========================================================================
+
+The FAQ is located here. Please start from this point!
+
+
+===========================================================================
+./asic
+===========================================================================
+
+All files for the ASPIDA ASIC implementation are here. Both
+synchronous and desynchronized versions are in the same chip, the mode
+being selectable through an external pin (sync_sel).
+
+
+===========================================================================
+./fpga
+===========================================================================
+
+All files for the ASPIDA FPGA implementation are here. The synchronous
+and desynchronized implementations are kept in separate directories.
+
+
+===========================================================================
+./gcc-dlx
+===========================================================================
+
+The GCC version to compile test programs for our DLX, as well as some
+helping scripts are kept here.
+
+
+===========================================================================
+./test_programs
+===========================================================================
+
+Some small programs for the DLX demo in source code.
+
+

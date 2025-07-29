@@ -1,0 +1,3 @@
+disk.o: disk.cc dlx.h dlxtypes.h dlxdisk.h
+dlxsim.o: dlxsim.cc dlx.h dlxtypes.h dlxdisk.h
+dlxsupport.o: dlxsupport.cc dlx.h dlxtypes.h dlxdisk.h

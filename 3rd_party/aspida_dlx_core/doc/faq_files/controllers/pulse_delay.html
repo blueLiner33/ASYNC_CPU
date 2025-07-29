@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Pulse Delay</title>
+</head>
+<body>
+module pulse_delay(inp, outp,outp1);<br>
+<br>
+input inp;<br>
+output outp;<br>
+output outp1;<br>
+wire outp1;<br>
+<br>
+wire wint1, wint2, wint3, wint4, wint5, wint6, wint7, wint8, wint9;<br>
+<br>
+// synthesis attribute KEEP of wint1 is TRUE<br>
+not pda1 (wint1, inp);<br>
+<br>
+// synthesis attribute KEEP of outp is TRUE<br>
+not pda14 (outp, wint1);<br>
+//synthesis attribute keep of outp1 is true<br>
+and and1 (outp1,outp,outp);<br>
+<br>
+endmodule<br>
+<br>
+</body>
+</html>
