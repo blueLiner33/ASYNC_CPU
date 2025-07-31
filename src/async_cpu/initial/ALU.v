@@ -23,8 +23,6 @@
 `define ACTION_RIGHT      16'd2
 `define ACTION_CONTINUE   16'd3
 
-`include "defines.vh"
-
 module custom_alu (
     input  wire        clk,
     input  wire        rst,
