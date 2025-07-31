@@ -6,31 +6,22 @@ module ID (
     input wire [15:0] reg_out_B,           // from AsyncRegisterFile
 
     input wire clk,
-    input  wire ack,
     input wire reset,
-        // FIFO interface
+
+        // Handshake
     output reg  [41:0] handshake_data,
-    output reg         req
+    output reg req,
+    input wire ack,
+
+    output wire [3:0] rsone,               // read address 1
+    output wire [3:0] rstwo,               // read address 2
+    output wire [3:0] rd,                  // destination register for writeback
+
 );
     wire [4:0] opcode = instruction [31:27];
     wire [3:0] rd = instruction [26:23];
     wire [3:0] rsone = instruction [22:19];
     wire [3:0] rstwo = instruction [18:15];
-    input  wire ack
-
-    wire [15:0] reg_out_A, reg_out_B;
-    AsyncRegisterFile #(.DataWidth(16), .NumRegs(16), .AddrWidth(4)) RF (
-        .clk(clk),
-        .req(1'b0),            // ID does not write directly
-        .ack(),                // ignore ack
-        .we(WB_reg_write),
-        .addr_w(WB_reg_addr),
-        .addr_r1(rsone),
-        .addr_r2(rstwo),
-        .data_in(WB_data),
-        .data_out1(reg_out_A),
-        .data_out2(reg_out_B)
-    );
 
     always_ff @(posedge clk or posedge reset) begin
         if (reset) begin
