@@ -1,3 +1,6 @@
+// Handles storing ALU results into the register file using 4-phase handshaking
+
+
 `include "Main/defines.v"
 
 module ALU (
