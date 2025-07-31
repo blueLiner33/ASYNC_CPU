@@ -24,7 +24,7 @@ module cpu_top(
     // -----------------------
     // Data buses
     // -----------------------
-    logic [15:0] instr;
+    logic [31:0] instr;
     logic [7:0]  pc;
     logic [15:0] reg_data1, reg_data2;
     logic [15:0] alu_result;
@@ -36,24 +36,24 @@ module cpu_top(
 
     logic [7:0]  branch_addr;
     logic        branch_en;
-    logic [3:0]  alu_op;
+    logic [4:0]  alu_op;  
 
     // -----------------------
     // Instruction Fetch (IF) stage
     // -----------------------
-    instr_fetch_top if_stage (
-        .clk(clk_if),
-        .reset(reset),
-        .branch_en(branch_en),
-        .branch_addr(branch_addr),
-        .pc_out(pc),
-        .instr_out(instr)
-    );
+instr_fetch_top if_stage (
+    .clk(clk_if),
+    .reset(reset),
+    .branch_en(branch_en),
+    .branch_addr(branch_addr),
+    .pc_out(pc),
+    .instr_out(instr)  
+);
 
     // -----------------------
     // Instruction Decode (ID) stage
     // -----------------------
-    instr_decode id_stage (
+    ID id_stage (
         .clk(clk_id),
         .reset(reset),
         .req(req_if_id),
@@ -62,7 +62,11 @@ module cpu_top(
         .pc(pc),
         .reg_addr1(addr_r1),
         .reg_addr2(addr_r2),
-        .alu_op(alu_op)
+        .alu_op(alu_op),
+        .branch_en(branch_en),     // CONNECT branching signals
+        .branch_addr(branch_addr),
+        .we(we_rf),                // CONNECT write enable from decode
+        .addr_w(addr_w_rf)         // CONNECT write address from decode
     );
 
     // -----------------------
@@ -90,11 +94,11 @@ module cpu_top(
         .opcode(alu_op),
         .A(reg_data1),
         .B(reg_data2),
-        .car_x( /* Connect if needed, else tie off */ 4'b0 ),
-        .img_row( /* Connect if needed, else tie off */ 16'b0 ),
-        .velocity_en(1'b0), // Adjust if you have a signal for this
+        .car_x(4'b0),          // Tie off if unused
+        .img_row(16'b0),       // Tie off if unused
+        .velocity_en(1'b0),    // Tie off if unused
         .result(alu_result),
-        .zero_flag(),
+        .zero_flag(),          // Can connect if needed
         .negative_flag(),
         .valid_out()
     );
@@ -107,7 +111,7 @@ module cpu_top(
         .req(req_alu_wb),
         .ack(ack_alu_wb),
         .alu_result(alu_result),
-        .write_reg(we_rf),
+        .write_reg(we_rf),      // Write enable signal
         .write_addr(addr_w_rf),
         .write_data(data_wb),
         .reg_ack(ack_wb_rf)
