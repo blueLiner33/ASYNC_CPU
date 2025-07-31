@@ -1,9 +1,10 @@
 `include "defines.v"
+
 module ID (
     input wire [31:0] instruction,
-    input wire [15:0] WB_data,//write back
-    input wire [3:0] WB_reg_addr,//which to write data to
-    input wire WB_reg_write,//enables register file write
+    input wire [15:0] reg_out_A,           // from AsyncRegisterFile
+    input wire [15:0] reg_out_B,           // from AsyncRegisterFile
+
     input wire clk,
     input  wire ack,
     input wire reset,
@@ -57,6 +58,5 @@ module ID (
             end
         end
     end
-
 
 endmodule

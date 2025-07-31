@@ -35,14 +35,14 @@ module cpu_top(
     // -----------------------
     // Instruction Fetch (IF) stage
     // -----------------------
-instr_fetch_top if_stage (
-    .clk(clk_if),
-    .reset(reset),
-    .branch_en(branch_en),
-    .branch_addr(branch_addr),
-    .pc_out(pc),
-    .instr_out(instr)  
-);
+    instr_fetch_top if_stage (
+        .clk(clk_if),
+        .reset(reset),
+        .branch_en(branch_en),
+        .branch_addr(branch_addr),
+        .pc_out(pc),
+        .instr_out(instr)  
+    );
 
     // -----------------------
     // Instruction Decode (ID) stage
@@ -57,10 +57,10 @@ instr_fetch_top if_stage (
         .reg_addr1(addr_r1),
         .reg_addr2(addr_r2),
         .alu_op(alu_op),
-        .branch_en(branch_en),     // CONNECT branching signals
+        .branch_en(branch_en),
         .branch_addr(branch_addr),
-        .we(we_rf),                // CONNECT write enable from decode
-        .addr_w(addr_w_rf)         // CONNECT write address from decode
+        .we(we_rf),
+        .addr_w(addr_w_rf)
     );
 
     // -----------------------
@@ -85,16 +85,13 @@ instr_fetch_top if_stage (
     custom_alu alu_unit (
         .clk(clk_alu),
         .rst(reset),
+        .req(req_id_alu),
+        .ack(ack_id_alu),
         .opcode(alu_op),
         .A(reg_data1),
         .B(reg_data2),
-        .car_x(4'b0),          // Tie off if unused
-        .img_row(16'b0),       // Tie off if unused
-        .velocity_en(1'b0),    // Tie off if unused
         .result(alu_result),
-        .zero_flag(),          // Can connect if needed
-        .negative_flag(),
-        .valid_out()
+        .rd(addr_w_rf)  // pass register destination forward
     );
 
     // -----------------------
@@ -102,10 +99,12 @@ instr_fetch_top if_stage (
     // -----------------------
     writeback wb_stage (
         .clk(clk_wb),
+        .rst(reset),
         .req(req_alu_wb),
         .ack(ack_alu_wb),
-        .alu_result(alu_result),
-        .write_reg(we_rf),      // Write enable signal
+        .rd(addr_w_rf),
+        .result(alu_result),
+        .write_en(we_rf),
         .write_addr(addr_w_rf),
         .write_data(data_wb),
         .reg_ack(ack_wb_rf)
@@ -130,7 +129,7 @@ instr_fetch_top if_stage (
         if (reset)
             req_id_alu <= 0;
         else if (!req_id_alu && !ack_id_alu)
-            req_id_alu <= 1;  // send operands to ALU
+            req_id_alu <= 1;
         else if (req_id_alu && ack_id_alu)
             req_id_alu <= 0;
     end
@@ -140,7 +139,7 @@ instr_fetch_top if_stage (
         if (reset)
             req_alu_wb <= 0;
         else if (!req_alu_wb && !ack_alu_wb)
-            req_alu_wb <= 1;  // ALU result ready
+            req_alu_wb <= 1;
         else if (req_alu_wb && ack_alu_wb)
             req_alu_wb <= 0;
     end
@@ -150,9 +149,9 @@ instr_fetch_top if_stage (
         if (reset)
             req_wb_rf <= 0;
         else if (!req_wb_rf && !ack_wb_rf)
-            req_wb_rf <= 1;  // start RF write
+            req_wb_rf <= 1;
         else if (req_wb_rf && ack_wb_rf)
-            req_wb_rf <= 0;  // complete RF write
+            req_wb_rf <= 0;
     end
 
 endmodule
