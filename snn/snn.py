@@ -586,31 +586,31 @@ def main():
                                                                  epochs=EPOCHS, lr=LEARNING_RATE)
 
     print("Training completed!")
-
+    #
     # Load best model
     model.load_state_dict(torch.load('best_lif_snn_model.pth'))
 
     # Print final weights and biases
     final_weights = print_model_weights(model)
 
-    # Extract and save weights/biases
+    # # Extract and save weights/biases
     print("Extracting weights and biases...")
     weights_biases = model.get_weights_biases()
 
-    # Save to file
-    with open('lif_snn_weights_biases.pkl', 'wb') as f:
-        pickle.dump(weights_biases, f)
+    # # Save to file
+    # with open('lif_snn_weights_biases.pkl', 'wb') as f:
+    #     pickle.dump(weights_biases, f)
 
-    # Also save as JSON for easier inspection
-    weights_biases_json = {}
-    for key, value in weights_biases.items():
-        if isinstance(value, np.ndarray):
-            weights_biases_json[key] = value.tolist()
-        else:
-            weights_biases_json[key] = value
-
-    with open('lif_snn_weights_biases.json', 'w') as f:
-        json.dump(weights_biases_json, f, indent=2)
+    # # Also save as JSON for easier inspection
+    # weights_biases_json = {}
+    # for key, value in weights_biases.items():
+    #     if isinstance(value, np.ndarray):
+    #         weights_biases_json[key] = value.tolist()
+    #     else:
+    #         weights_biases_json[key] = value
+    #
+    # with open('lif_snn_weights_biases.json', 'w') as f:
+    #     json.dump(weights_biases_json, f, indent=2)
 
     print("Weights and biases saved to:")
     print("- lif_snn_weights_biases.pkl (for Python)")
