@@ -2,17 +2,19 @@ module writeback (
     input logic clk,
     input logic rst,
 
-    // FIFO input from ALU
-    input logic fifo_valid,             // indicates ALU has pushed data
-    output logic fifo_ack,             // ack back to ALU FIFO
-    input logic [3:0] rd,              // destination register index
-    input logic [15:0] result,         // ALU result to be written
+    // Handshake with ALU
+    input logic req,
+    output logic ack,
 
-    // Register file interface
-    output logic write_en,             // enables register write
-    output logic [3:0] write_addr,     // target register
-    output logic [15:0] write_data,    // data to write
-    input logic reg_ack                // register file acknowledges write complete
+    // Data from ALU
+    input logic [3:0] rd,
+    input logic [15:0] result,
+
+    // Register File interface
+    output logic write_en,
+    output logic [3:0] write_addr,
+    output logic [15:0] write_data,
+    input logic reg_ack
 );
 
     typedef enum logic [1:0] {
@@ -28,12 +30,13 @@ module writeback (
         if (rst) begin
             state <= IDLE;
             write_en <= 0;
-            fifo_ack <= 0;
+            ack <= 0;
         end else begin
             case (state)
                 IDLE: begin
-                    fifo_ack <= 0;
-                    if (fifo_valid) begin
+                    ack <= 0;
+                    write_en <= 0;
+                    if (req) begin
                         write_addr <= rd;
                         write_data <= result;
                         write_en <= 1;
@@ -44,13 +47,13 @@ module writeback (
                 WAIT_ACK: begin
                     if (reg_ack) begin
                         write_en <= 0;
-                        fifo_ack <= 1;   // tell ALU FIFO we’re done with this item
+                        ack <= 1;
                         state <= COMPLETE;
                     end
                 end
 
                 COMPLETE: begin
-                    fifo_ack <= 0;       // return to neutral
+                    ack <= 0;
                     state <= IDLE;
                 end
             endcase
