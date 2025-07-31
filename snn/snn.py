@@ -220,7 +220,7 @@ class KITTIDataset(Dataset):
         image = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
 
         # Resize and flatten to 208 features
-        image = cv2.resize(image, (16, 13))  # 16*13 = 208
+        image = cv2.resize(image, (26, 8)) 
         image = image.flatten().astype(np.float32) / 255.0
 
         # Load labels - MULTIPLE objects per image
