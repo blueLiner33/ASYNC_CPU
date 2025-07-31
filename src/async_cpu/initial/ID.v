@@ -1,42 +1,35 @@
 `include "defines.v"
+
 module ID (
     input wire [31:0] instruction,
-    input wire [15:0] WB_data,//write back
-    input wire [3:0] WB_reg_addr,//which to write data to
-    input wire WB_reg_write,//enables register file write
+    input wire [15:0] reg_out_A,           // from AsyncRegisterFile
+    input wire [15:0] reg_out_B,           // from AsyncRegisterFile
+
     input wire clk,
     input wire reset,
-        // FIFO interface
+
+    output wire [3:0] rsone,               // read address 1
+    output wire [3:0] rstwo,               // read address 2
+    output wire [3:0] rd,                  // destination register for writeback
+
+    // FIFO interface
     output reg  [41:0] fifo_data,
     output reg         fifo_wr_en,
     input  wire        fifo_wr_ready
 );
-    wire [4:0] opcode = instruction [31:27];
-    wire [3:0] rd = instruction [26:23];
-    wire [3:0] rsone = instruction [22:19];
-    wire [3:0] rstwo = instruction [18:15];
 
-
-    wire [15:0] reg_out_A, reg_out_B;
-    AsyncRegisterFile #(.DataWidth(16), .NumRegs(16), .AddrWidth(4)) RF (
-        .clk(clk),
-        .req(1'b0),            // ID does not write directly
-        .ack(),                // ignore ack
-        .we(WB_reg_write),
-        .addr_w(WB_reg_addr),
-        .addr_r1(rsone),
-        .addr_r2(rstwo),
-        .data_in(WB_data),
-        .data_out1(reg_out_A),
-        .data_out2(reg_out_B)
-    );
+    // Extract instruction fields
+    wire [4:0] opcode = instruction[31:27];
+    assign rd    = instruction[26:23];
+    assign rsone = instruction[22:19];
+    assign rstwo = instruction[18:15];
 
     always_ff @(posedge clk or posedge reset) begin
         if (reset) begin
             fifo_wr_en <= 0;
             fifo_data  <= 0;
         end else begin
-            fifo_wr_en <= 0; // default
+            fifo_wr_en <= 0; // default low
             if (fifo_wr_ready) begin
                 case (opcode)
                     `OP_MOV, `OP_ADD, `OP_SUB, `OP_AND, `OP_OR, `OP_NOT,
@@ -56,6 +49,5 @@ module ID (
             end
         end
     end
-
 
 endmodule
