@@ -5,17 +5,17 @@ module ID (
     input wire [3:0] WB_reg_addr,//which to write data to
     input wire WB_reg_write,//enables register file write
     input wire clk,
+    input  wire ack,
     input wire reset,
         // FIFO interface
-    output reg  [41:0] fifo_data,
-    output reg         fifo_wr_en,
-    input  wire        fifo_wr_ready
+    output reg  [41:0] handshake_data,
+    output reg         req
 );
     wire [4:0] opcode = instruction [31:27];
     wire [3:0] rd = instruction [26:23];
     wire [3:0] rsone = instruction [22:19];
     wire [3:0] rstwo = instruction [18:15];
-
+    input  wire ack
 
     wire [15:0] reg_out_A, reg_out_B;
     AsyncRegisterFile #(.DataWidth(16), .NumRegs(16), .AddrWidth(4)) RF (
@@ -33,26 +33,27 @@ module ID (
 
     always_ff @(posedge clk or posedge reset) begin
         if (reset) begin
-            fifo_wr_en <= 0;
-            fifo_data  <= 0;
+            req <= 0;
+            handshake_data <= 0;
         end else begin
-            fifo_wr_en <= 0; // default
-            if (fifo_wr_ready) begin
+            if (!req) begin
                 case (opcode)
                     `OP_MOV, `OP_ADD, `OP_SUB, `OP_AND, `OP_OR, `OP_NOT,
                     `OP_CMP, `OP_MULT, `OP_DIV:
-                        fifo_data <= {reg_out_B, reg_out_A, opcode, rd};
+                        handshake_data <= {reg_out_B, reg_out_A, opcode, rd};
 
                     `OP_MOVE_LEFT, `OP_MOVE_RIGHT, `OP_STOP, `OP_CONTINUE:
-                        fifo_data <= {16'b0, 16'b0, opcode, rd};
+                        handshake_data <= {16'b0, 16'b0, opcode, rd};
 
                     `OP_OB_CHECK, `OP_VELOCITY_GUARD:
-                        fifo_data <= {reg_out_B, reg_out_A, opcode, rd};
+                        handshake_data <= {reg_out_B, reg_out_A, opcode, rd};
 
                     default:
-                        fifo_data <= 0;
+                        handshake_data <= 0;
                 endcase
-                fifo_wr_en <= 1;
+                req <= 1;
+            end else if (req && ack)begin
+                req <=0;
             end
         end
     end
