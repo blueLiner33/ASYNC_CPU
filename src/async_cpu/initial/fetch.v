@@ -7,12 +7,12 @@ module instr_fetch_top(
     input  wire [7:0] branch_addr,
 
     // Outputs
-    output wire [7:0] pc_out,
-    output wire [15:0] instr_out
+    output wire [7:0]  pc_out,
+    output wire [31:0] instr_out   // 32-bit instruction now
 );
 
-    wire [7:0] pc;
-    wire [15:0] instr;
+    wire [7:0]  pc;                // 8-bit program counter
+    wire [31:0] instr;             // 32-bit instruction
 
     // Program Counter
     program_counter #(.WIDTH(8)) pc_unit (
@@ -23,13 +23,13 @@ module instr_fetch_top(
         .pc(pc)
     );
 
-    // Instruction ROM
-    instr_rom #(.ADDR_WIDTH(8), .DATA_WIDTH(16)) rom (
+    // Instruction ROM (32-bit wide)
+    instr_rom #(.ADDR_WIDTH(8), .DATA_WIDTH(32)) rom (
         .addr(pc),
         .instr(instr)
     );
 
-    assign pc_out = pc;
-    assign instr_out = instr;
+    assign pc_out    = pc;         // 8-bit output
+    assign instr_out = instr;      // 32-bit instruction output
 
 endmodule
