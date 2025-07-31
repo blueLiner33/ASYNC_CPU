@@ -1,7 +1,0 @@
-# Synthesise Clock Trees
-
-specifyClockTree -clkfile ASPIDA.clockspec -skipUniquify
-checkUnique
-ckSynthesis -forceReconvergent
-#ckSynthesis -forceReconvergent -ignoreLoopDetect
-

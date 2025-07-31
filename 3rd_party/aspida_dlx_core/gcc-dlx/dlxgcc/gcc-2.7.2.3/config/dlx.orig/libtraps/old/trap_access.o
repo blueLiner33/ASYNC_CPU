@@ -1,9 +1,0 @@
-.text
-.proc _access
-.global _access
-_access:		
-	trap	#11
-	jr	r31
-	nop
-.endproc _access
-

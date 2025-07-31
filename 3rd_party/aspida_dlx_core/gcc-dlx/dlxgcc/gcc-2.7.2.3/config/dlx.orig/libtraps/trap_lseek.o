@@ -1,8 +1,0 @@
-.text
-.proc _lseek
-.global _lseek
-_lseek:		
-	trap	#0x212
-	jr	r31
-	nop
-.endproc _lseek

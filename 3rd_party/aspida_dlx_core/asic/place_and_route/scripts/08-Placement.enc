@@ -1,4 +1,0 @@
-# Place Core Cells
-
-amoebaPlace -iofixed -slow -timingdriven
-checkPlace

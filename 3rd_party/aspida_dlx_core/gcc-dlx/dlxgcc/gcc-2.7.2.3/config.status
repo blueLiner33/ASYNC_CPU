@@ -1,4 +1,0 @@
-#!/bin/sh
-# GCC was configured as follows:
-./configure --prefix=/home/andrikos/release/dlxgcc/xgcc/ --target=dlx
-echo host=dlx-none target=dlx-none build=dlx-none
