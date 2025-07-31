@@ -8,7 +8,7 @@ module instr_fetch_top(
 
     // Outputs
     output wire [7:0]  pc_out,
-    output wire [31:0] instr_out   // 32-bit instruction now
+    output wire [31:0] instr_out   
 );
 
     wire [7:0]  pc;                // 8-bit program counter

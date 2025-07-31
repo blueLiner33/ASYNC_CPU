@@ -1,9 +1,3 @@
-/*
-    cpu_top.v
-    GALS CPU top-level integrating instruction fetch, decode, register file,
-    ALU, write-back, and optional asynchronous FIFOs.
-*/
-
 module cpu_top(
     input  wire        clk_if,
     input  wire        clk_id,
