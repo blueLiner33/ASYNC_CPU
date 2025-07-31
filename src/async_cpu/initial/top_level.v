@@ -1,3 +1,9 @@
+/*
+    cpu_top.v
+    GALS CPU top-level integrating instruction fetch, decode, register file,
+    ALU, write-back, and optional asynchronous FIFOs.
+*/
+
 module cpu_top(
     input  wire        clk_if,
     input  wire        clk_id,
@@ -30,12 +36,12 @@ module cpu_top(
 
     logic [7:0]  branch_addr;
     logic        branch_en;
-    logic [4:0]  alu_op;  // match ALU opcode width
+    logic [3:0]  alu_op;
 
     // -----------------------
     // Instruction Fetch (IF) stage
     // -----------------------
-    fetch if_stage (
+    instr_fetch_top if_stage (
         .clk(clk_if),
         .reset(reset),
         .branch_en(branch_en),
@@ -47,7 +53,7 @@ module cpu_top(
     // -----------------------
     // Instruction Decode (ID) stage
     // -----------------------
-    ID id_stage (
+    instr_decode id_stage (
         .clk(clk_id),
         .reset(reset),
         .req(req_if_id),
@@ -62,7 +68,8 @@ module cpu_top(
     // -----------------------
     // Register File (RF)
     // -----------------------
-    RF_and_handshake_in_and_out rf (
+    AsyncRegisterFile rf (
+        .clk(clk_regfile),
         .req(req_wb_rf),
         .ack(ack_wb_rf),
         .we(we_rf),
@@ -77,14 +84,19 @@ module cpu_top(
     // -----------------------
     // ALU stage
     // -----------------------
-    ALU alu_unit (
+    custom_alu alu_unit (
         .clk(clk_alu),
-        .req(req_id_alu),
-        .ack(ack_id_alu),
-        .operand1(reg_data1),
-        .operand2(reg_data2),
-        .alu_op(alu_op),
-        .result(alu_result)
+        .rst(reset),
+        .opcode(alu_op),
+        .A(reg_data1),
+        .B(reg_data2),
+        .car_x( /* Connect if needed, else tie off */ 4'b0 ),
+        .img_row( /* Connect if needed, else tie off */ 16'b0 ),
+        .velocity_en(1'b0), // Adjust if you have a signal for this
+        .result(alu_result),
+        .zero_flag(),
+        .negative_flag(),
+        .valid_out()
     );
 
     // -----------------------
@@ -92,12 +104,10 @@ module cpu_top(
     // -----------------------
     writeback wb_stage (
         .clk(clk_wb),
-        .rst(reset),
-        .fifo_valid(req_alu_wb),
-        .fifo_ack(ack_alu_wb),
-        .rd(addr_w_rf),
-        .result(alu_result),
-        .write_en(we_rf),
+        .req(req_alu_wb),
+        .ack(ack_alu_wb),
+        .alu_result(alu_result),
+        .write_reg(we_rf),
         .write_addr(addr_w_rf),
         .write_data(data_wb),
         .reg_ack(ack_wb_rf)
@@ -122,7 +132,7 @@ module cpu_top(
         if (reset)
             req_id_alu <= 0;
         else if (!req_id_alu && !ack_id_alu)
-            req_id_alu <= 1;
+            req_id_alu <= 1;  // send operands to ALU
         else if (req_id_alu && ack_id_alu)
             req_id_alu <= 0;
     end
@@ -132,7 +142,7 @@ module cpu_top(
         if (reset)
             req_alu_wb <= 0;
         else if (!req_alu_wb && !ack_alu_wb)
-            req_alu_wb <= 1;
+            req_alu_wb <= 1;  // ALU result ready
         else if (req_alu_wb && ack_alu_wb)
             req_alu_wb <= 0;
     end
@@ -142,9 +152,9 @@ module cpu_top(
         if (reset)
             req_wb_rf <= 0;
         else if (!req_wb_rf && !ack_wb_rf)
-            req_wb_rf <= 1;
+            req_wb_rf <= 1;  // start RF write
         else if (req_wb_rf && ack_wb_rf)
-            req_wb_rf <= 0;
+            req_wb_rf <= 0;  // complete RF write
     end
 
 endmodule
