@@ -1,8 +1,0 @@
-.text
-.proc _isatty
-.global _isatty
-_isatty:		
-	trap	#10
-	jr	r31
-	nop
-.endproc _isatty
