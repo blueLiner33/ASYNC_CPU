@@ -20,19 +20,17 @@ module cpu_top(
     // -----------------------
     logic [31:0] instr;
     logic [7:0]  pc;
-    
-    logic [15:0] reg_data1, reg_data2; // From RF to ID
-    logic [15:0] alu_in1, alu_in2;     // From ID to ALU
+    logic [15:0] reg_data1, reg_data2;
     logic [15:0] alu_result;
-    
-    logic [3:0]  addr_r1, addr_r2;     // From ID to RF
-    logic [3:0]  addr_w_rf;            // From WB to RF
+
+    logic [3:0]  addr_r1, addr_r2;
+    logic [3:0]  addr_w_rf;
     logic        we_rf;
     logic [15:0] data_wb;
 
     logic [7:0]  branch_addr;
     logic        branch_en;
-    logic [4:0]  alu_op;
+    logic [4:0]  alu_op;  
 
     // -----------------------
     // Instruction Fetch (IF) stage
@@ -43,7 +41,7 @@ module cpu_top(
         .branch_en(branch_en),
         .branch_addr(branch_addr),
         .pc_out(pc),
-        .instr_out(instr)
+        .instr_out(instr)  
     );
 
     // -----------------------
@@ -56,17 +54,13 @@ module cpu_top(
         .ack(ack_if_id),
         .instr(instr),
         .pc(pc),
-        .reg_data1(reg_data1),     // From RF
-        .reg_data2(reg_data2),     // From RF
-        .reg_addr1(addr_r1),       // To RF
-        .reg_addr2(addr_r2),       // To RF
-        .alu_in1(alu_in1),         // To ALU
-        .alu_in2(alu_in2),         // To ALU
-        .alu_op(alu_op),           // To ALU
+        .reg_addr1(addr_r1),
+        .reg_addr2(addr_r2),
+        .alu_op(alu_op),
         .branch_en(branch_en),
         .branch_addr(branch_addr),
-        .we(we_rf),                // To RF + WB
-        .addr_w(addr_w_rf)        // To RF + WB
+        .we(we_rf),
+        .addr_w(addr_w_rf)
     );
 
     // -----------------------
@@ -91,16 +85,13 @@ module cpu_top(
     custom_alu alu_unit (
         .clk(clk_alu),
         .rst(reset),
+        .req(req_id_alu),
+        .ack(ack_id_alu),
         .opcode(alu_op),
-        .A(alu_in1),
-        .B(alu_in2),
-        .car_x(4'b0),          // Tie off if unused
-        .img_row(16'b0),       // Tie off if unused
-        .velocity_en(1'b0),    // Tie off if unused
+        .A(reg_data1),
+        .B(reg_data2),
         .result(alu_result),
-        .zero_flag(),          // Can connect if needed
-        .negative_flag(),
-        .valid_out()
+        .rd(addr_w_rf)  // pass register destination forward
     );
 
     // -----------------------
@@ -108,10 +99,12 @@ module cpu_top(
     // -----------------------
     writeback wb_stage (
         .clk(clk_wb),
+        .rst(reset),
         .req(req_alu_wb),
         .ack(ack_alu_wb),
-        .alu_result(alu_result),
-        .write_reg(we_rf),
+        .rd(addr_w_rf),
+        .result(alu_result),
+        .write_en(we_rf),
         .write_addr(addr_w_rf),
         .write_data(data_wb),
         .reg_ack(ack_wb_rf)
