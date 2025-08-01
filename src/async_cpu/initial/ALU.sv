@@ -1,4 +1,5 @@
 `include "defines.v"
+
 module cpu_top (
     input  wire clk_if,
     input  wire clk_id,
@@ -110,6 +111,7 @@ module cpu_top (
         .result(alu_result),
         .write_en(we_rf),
         .write_addr(addr_w_rf),
-        .write_data(data_wb
+        .write_data(data_wb)
+    );
 
 endmodule
