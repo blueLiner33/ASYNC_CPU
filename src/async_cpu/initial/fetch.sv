@@ -1,3 +1,5 @@
+`include "defines.v"
+
 module instr_fetch_top(
     input  wire clk,
     input  wire reset,
