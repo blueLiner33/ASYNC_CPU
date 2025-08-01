@@ -1,10 +1,10 @@
-module cpu_top(
-    input  wire        clk_if,
-    input  wire        clk_id,
-    input  wire        clk_alu,
-    input  wire        clk_wb,
-    input  wire        clk_regfile,
-    input  wire        reset
+module cpu_top (
+    input  wire clk_if,
+    input  wire clk_id,
+    input  wire clk_alu,
+    input  wire clk_wb,
+    input  wire clk_regfile,
+    input  wire reset
 );
 
     // -----------------------
@@ -13,27 +13,29 @@ module cpu_top(
     logic req_if_id,  ack_if_id;
     logic req_id_alu, ack_id_alu;
     logic req_alu_wb, ack_alu_wb;
-    logic req_wb_rf,  ack_wb_rf;
+    logic ack_wb_rf;  // Driven by Register File
 
     // -----------------------
     // Data buses
     // -----------------------
     logic [31:0] instr;
     logic [7:0]  pc;
+
     logic [15:0] reg_data1, reg_data2;
     logic [15:0] alu_result;
-
     logic [3:0]  addr_r1, addr_r2;
     logic [3:0]  addr_w_rf;
-    logic        we_rf;
     logic [15:0] data_wb;
 
     logic [7:0]  branch_addr;
     logic        branch_en;
-    logic [4:0]  alu_op;  
+    logic [4:0]  alu_op;
+
+    logic we_rf;
+    logic alu_valid;
 
     // -----------------------
-    // Instruction Fetch (IF) stage
+    // Instruction Fetch Stage
     // -----------------------
     instr_fetch_top if_stage (
         .clk(clk_if),
@@ -41,34 +43,34 @@ module cpu_top(
         .branch_en(branch_en),
         .branch_addr(branch_addr),
         .pc_out(pc),
-        .instr_out(instr)  
+        .instr_out(instr)
     );
 
     // -----------------------
-    // Instruction Decode (ID) stage
+    // Instruction Decode Stage
     // -----------------------
     ID id_stage (
         .clk(clk_id),
         .reset(reset),
+        .instruction(instr),
+        .reg_out_A(reg_data1),
+        .reg_out_B(reg_data2),
         .req(req_if_id),
         .ack(ack_if_id),
-        .instr(instr),
-        .pc(pc),
-        .reg_addr1(addr_r1),
-        .reg_addr2(addr_r2),
+        .rsone(addr_r1),
+        .rstwo(addr_r2),
+        .rd(addr_w_rf),
         .alu_op(alu_op),
         .branch_en(branch_en),
-        .branch_addr(branch_addr),
-        .we(we_rf),
-        .addr_w(addr_w_rf)
+        .branch_addr(branch_addr)
     );
 
     // -----------------------
-    // Register File (RF)
+    // Register File
     // -----------------------
     AsyncRegisterFile rf (
         .clk(clk_regfile),
-        .req(req_wb_rf),
+        .req(req_alu_wb),         // Request from Writeback stage
         .ack(ack_wb_rf),
         .we(we_rf),
         .addr_w(addr_w_rf),
@@ -80,22 +82,25 @@ module cpu_top(
     );
 
     // -----------------------
-    // ALU stage
+    // ALU Stage
     // -----------------------
     custom_alu alu_unit (
         .clk(clk_alu),
         .rst(reset),
-        .req(req_id_alu),
-        .ack(ack_id_alu),
         .opcode(alu_op),
         .A(reg_data1),
         .B(reg_data2),
+        .car_x(4'd0),          // Stubbed input
+        .img_row(16'd0),
+        .velocity_en(1'b0),
         .result(alu_result),
-        .rd(addr_w_rf)  // pass register destination forward
+        .zero_flag(),
+        .negative_flag(),
+        .valid_out(alu_valid)
     );
 
     // -----------------------
-    // Write-Back (WB) stage
+    // Writeback Stage
     // -----------------------
     writeback wb_stage (
         .clk(clk_wb),
@@ -109,49 +114,5 @@ module cpu_top(
         .write_data(data_wb),
         .reg_ack(ack_wb_rf)
     );
-
-    // -----------------------
-    // Handshake FSMs
-    // -----------------------
-
-    // IF -> ID
-    always_ff @(posedge clk_if or posedge reset) begin
-        if (reset)
-            req_if_id <= 0;
-        else if (!req_if_id && !ack_if_id)
-            req_if_id <= 1;
-        else if (req_if_id && ack_if_id)
-            req_if_id <= 0;
-    end
-
-    // ID -> ALU
-    always_ff @(posedge clk_id or posedge reset) begin
-        if (reset)
-            req_id_alu <= 0;
-        else if (!req_id_alu && !ack_id_alu)
-            req_id_alu <= 1;
-        else if (req_id_alu && ack_id_alu)
-            req_id_alu <= 0;
-    end
-
-    // ALU -> WB
-    always_ff @(posedge clk_alu or posedge reset) begin
-        if (reset)
-            req_alu_wb <= 0;
-        else if (!req_alu_wb && !ack_alu_wb)
-            req_alu_wb <= 1;
-        else if (req_alu_wb && ack_alu_wb)
-            req_alu_wb <= 0;
-    end
-
-    // WB -> Register File
-    always_ff @(posedge clk_wb or posedge reset) begin
-        if (reset)
-            req_wb_rf <= 0;
-        else if (!req_wb_rf && !ack_wb_rf)
-            req_wb_rf <= 1;
-        else if (req_wb_rf && ack_wb_rf)
-            req_wb_rf <= 0;
-    end
 
 endmodule
