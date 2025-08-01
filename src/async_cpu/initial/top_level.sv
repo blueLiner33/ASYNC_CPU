@@ -1,4 +1,4 @@
-module cpu_top (
+module top_level (
     input  wire clk_if,
     input  wire clk_id,
     input  wire clk_alu,
