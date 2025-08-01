@@ -8,20 +8,21 @@ module ID (
     input wire clk,
     input wire reset,
 
-        // Handshake
+    // Handshake
     output reg  [41:0] handshake_data,
     output reg req,
     input wire ack,
 
     output wire [3:0] rsone,               // read address 1
     output wire [3:0] rstwo,               // read address 2
-    output wire [3:0] rd,                  // destination register for writeback
-
+    output wire [3:0] rd                   // destination register for writeback
 );
+
+    assign rd    = instruction[26:23];
+    assign rsone = instruction[22:19];
+    assign rstwo = instruction[18:15];
+
     wire [4:0] opcode = instruction [31:27];
-    wire [3:0] rd = instruction [26:23];
-    wire [3:0] rsone = instruction [22:19];
-    wire [3:0] rstwo = instruction [18:15];
 
     always_ff @(posedge clk or posedge reset) begin
         if (reset) begin
@@ -44,8 +45,8 @@ module ID (
                         handshake_data <= 0;
                 endcase
                 req <= 1;
-            end else if (req && ack)begin
-                req <=0;
+            end else if (req && ack) begin
+                req <= 0;
             end
         end
     end
