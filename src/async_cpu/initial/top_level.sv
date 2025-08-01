@@ -13,7 +13,7 @@ module cpu_top (
     logic req_if_id,  ack_if_id;
     logic req_id_alu, ack_id_alu;
     logic req_alu_wb, ack_alu_wb;
-    logic ack_wb_rf;  // RF ack is driven by RF, req is driven by WB
+    logic ack_wb_rf;  // Driven by Register File
 
     // -----------------------
     // Data buses
@@ -35,7 +35,7 @@ module cpu_top (
     logic alu_valid;
 
     // -----------------------
-    // IF Stage
+    // Instruction Fetch Stage
     // -----------------------
     instr_fetch_top if_stage (
         .clk(clk_if),
@@ -47,7 +47,7 @@ module cpu_top (
     );
 
     // -----------------------
-    // ID Stage
+    // Instruction Decode Stage
     // -----------------------
     ID id_stage (
         .clk(clk_id),
@@ -55,12 +55,14 @@ module cpu_top (
         .instruction(instr),
         .reg_out_A(reg_data1),
         .reg_out_B(reg_data2),
-        .handshake_data(),  // connect if needed
         .req(req_if_id),
         .ack(ack_if_id),
         .rsone(addr_r1),
         .rstwo(addr_r2),
-        .rd(addr_w_rf)
+        .rd(addr_w_rf),
+        .alu_op(alu_op),
+        .branch_en(branch_en),
+        .branch_addr(branch_addr)
     );
 
     // -----------------------
@@ -68,7 +70,7 @@ module cpu_top (
     // -----------------------
     AsyncRegisterFile rf (
         .clk(clk_regfile),
-        .req(req_alu_wb),  // driven by WB stage internally
+        .req(req_alu_wb),         // Request from Writeback stage
         .ack(ack_wb_rf),
         .we(we_rf),
         .addr_w(addr_w_rf),
@@ -88,9 +90,9 @@ module cpu_top (
         .opcode(alu_op),
         .A(reg_data1),
         .B(reg_data2),
-        .car_x(4'd0),         // stub if unused
-        .img_row(16'd0),      // stub if unused
-        .velocity_en(1'b0),   // stub if unused
+        .car_x(4'd0),          // Stubbed input
+        .img_row(16'd0),
+        .velocity_en(1'b0),
         .result(alu_result),
         .zero_flag(),
         .negative_flag(),
@@ -98,7 +100,7 @@ module cpu_top (
     );
 
     // -----------------------
-    // WB Stage
+    // Writeback Stage
     // -----------------------
     writeback wb_stage (
         .clk(clk_wb),
@@ -109,4 +111,8 @@ module cpu_top (
         .result(alu_result),
         .write_en(we_rf),
         .write_addr(addr_w_rf),
-        .write_data(data_wb
+        .write_data(data_wb),
+        .reg_ack(ack_wb_rf)
+    );
+
+endmodule
