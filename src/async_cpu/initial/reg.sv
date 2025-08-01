@@ -1,3 +1,6 @@
+`include "defines.v"
+
+
 module AsyncRegisterFile #(
     parameter DataWidth = 16,
     parameter NumRegs = 16,
