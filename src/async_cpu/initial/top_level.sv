@@ -25,6 +25,7 @@ module cpu_top (
     logic [15:0] alu_result;
     logic [3:0]  addr_r1, addr_r2;
     logic [3:0]  addr_w_rf;
+    logic [3:0] addr_w_id;
     logic [15:0] data_wb;
 
     logic [7:0]  branch_addr;
@@ -50,36 +51,35 @@ module cpu_top (
     // Instruction Decode Stage
     // -----------------------
     ID id_stage (
-        .clk(clk_id),
-        .reset(reset),
-        .instruction(instr),
-        .reg_out_A(reg_data1),
-        .reg_out_B(reg_data2),
-        .req(req_if_id),
-        .ack(ack_if_id),
-        .rsone(addr_r1),
-        .rstwo(addr_r2),
-        .rd(addr_w_rf),
-        .alu_op(alu_op),
-        .branch_en(branch_en),
-        .branch_addr(branch_addr)
-    );
+    .clk(clk_id),
+    .reset(reset),
+    .instruction(instr),
+    .reg_out_A(reg_data1),
+    .reg_out_B(reg_data2),
+    .handshake_data(),
+    .req(req_if_id),
+    .ack(ack_if_id),
+    .rsone(addr_r1),
+    .rstwo(addr_r2),
+    .rd(addr_w_id) // <-- renamed
+);
 
     // -----------------------
     // Register File
     // -----------------------
     AsyncRegisterFile rf (
-        .clk(clk_regfile),
-        .req(req_alu_wb),         // Request from Writeback stage
-        .ack(ack_wb_rf),
-        .we(we_rf),
-        .addr_w(addr_w_rf),
-        .addr_r1(addr_r1),
-        .addr_r2(addr_r2),
-        .data_in(data_wb),
-        .data_out1(reg_data1),
-        .data_out2(reg_data2)
-    );
+    .clk(clk_regfile),
+    .req(req_alu_wb),
+    .ack(ack_wb_rf),
+    .we(we_rf),
+    .addr_w(addr_w_rf), // ONLY written by WB
+    .addr_r1(addr_r1),
+    .addr_r2(addr_r2),
+    .data_in(data_wb),
+    .data_out1(reg_data1),
+    .data_out2(reg_data2)
+);
+
 
     // -----------------------
     // ALU Stage
@@ -103,16 +103,16 @@ module cpu_top (
     // Writeback Stage
     // -----------------------
     writeback wb_stage (
-        .clk(clk_wb),
-        .rst(reset),
-        .req(req_alu_wb),
-        .ack(ack_alu_wb),
-        .rd(addr_w_rf),
-        .result(alu_result),
-        .write_en(we_rf),
-        .write_addr(addr_w_rf),
-        .write_data(data_wb),
-        .reg_ack(ack_wb_rf)
-    );
+    .clk(clk_wb),
+    .rst(reset),
+    .req(req_alu_wb),
+    .ack(ack_alu_wb),
+    .rd(addr_w_id), // still passing from ID
+    .result(alu_result),
+    .write_en(we_rf),
+    .write_addr(addr_w_rf), // final write address
+    .write_data(data_wb)
+);
+
 
 endmodule
