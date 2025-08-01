@@ -2,23 +2,21 @@
 
 module tb_top_level;
 
-    // Clock signals
-    logic clk_if = 0;
-    logic clk_id = 0;
-    logic clk_alu = 0;
-    logic clk_wb = 0;
-    logic clk_regfile = 0;
-    logic reset = 1;
+    reg clk_if = 0;
+    reg clk_id = 0;
+    reg clk_alu = 0;
+    reg clk_wb = 0;
+    reg clk_regfile = 0;
+    reg reset = 1;
 
-    // Clock toggles every 5ns (100MHz)
-    always #5 clk_if = ~clk_if;
-    always #7 clk_id = ~clk_id;
-    always #9 clk_alu = ~clk_alu;
-    always #11 clk_wb = ~clk_wb;
-    always #13 clk_regfile = ~clk_regfile;
+    // Clock generation
+    always #5  clk_if      = ~clk_if;
+    always #6  clk_id      = ~clk_id;
+    always #7  clk_alu     = ~clk_alu;
+    always #8  clk_wb      = ~clk_wb;
+    always #9  clk_regfile = ~clk_regfile;
 
-    // DUT
-    cpu_top dut (
+    top_level uut (
         .clk_if(clk_if),
         .clk_id(clk_id),
         .clk_alu(clk_alu),
@@ -28,14 +26,16 @@ module tb_top_level;
     );
 
     initial begin
-        $dumpfile("cpu_top.vcd");     // For waveform viewing in GTKWave
+        $dumpfile("cpu_top.vcd");
         $dumpvars(0, tb_top_level);
 
-        // Apply reset
+        // Initial Reset
         #20 reset = 0;
 
-        // Run simulation
-        #500 $finish;
+        // Run simulation for enough time to process instructions
+        #5000;
+
+        $finish;
     end
 
 endmodule
